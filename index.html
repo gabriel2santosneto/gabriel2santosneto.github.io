@@ -109,6 +109,21 @@
 				// (if you zoom in, the icons get cut off, if you zoom out, the effect is too thick)
 				document.getElementById("disabled-inset-filter").setAttribute("x", "0");
 			});
+
+			// ---- [ OPEN "MY COMPUTER" ON LANDING ] ----
+			window.addEventListener('DOMContentLoaded', () => {
+				// Try some likely options for your 98.js "Windows" desktop
+				if (typeof openFolderWindow === 'function') {
+					openFolderWindow('My Computer');
+				} else if (window.FolderView && typeof window.FolderView.open === 'function') {
+					window.FolderView.open('My Computer');
+				} else {
+					// You might need to use your own open method from src/$desktop.js or src/FolderView.js
+					// If you tell me more about your JS API, I’ll refine this.
+					console.warn('Could not open "My Computer" automatically. Check your API or share src/FolderView.js.');
+				}
+			});
+			// ---- [ END "MY COMPUTER" AUTOLAUNCH ] ----
 		</script>
 	</body>
 </html>
