@@ -99,3 +99,52 @@ $("html").on("drop", function (event) {
 $(window).on("scroll focusin", () => {
 	window.scrollTo(0, 0);
 });
+
+
+// === Custom Desktop Icon: My Pictures (added by ChatGPT) ===
+(function () {
+  try {
+    // Create the icon element
+    const $icon = $(`
+      <div class="desktop-icon" style="position:absolute; left:40px; top:40px; width:80px; text-align:center; cursor:default;">
+        <img src="images/icons/folder-pictures.png" width="32" height="32" alt="My Pictures">
+        <div class="label" style="margin-top:4px; color:#000; text-shadow:1px 1px #fff; font-family:'MS Sans Serif', Tahoma, Arial; font-size:12px;">
+          My Pictures
+        </div>
+      </div>
+    `);
+
+    function openMyPictures() {
+      // Preferred: open inside a window in the OS UI
+      if (typeof window.openWindow === "function") {
+        openWindow({
+          title: "My Pictures",
+          width: 720,
+          height: 520,
+          html: `<iframe src="my-pictures copy/index.html" style="border:0; width:100%; height:100%;"></iframe>`
+        });
+      } else if (typeof window.openIframeApp === "function") {
+        openIframeApp({ title: "My Pictures", src: "my-pictures copy/index.html", width: 720, height: 520 });
+      } else {
+        // Fallback: open in a new browser tab
+        window.open("my-pictures copy/index.html", "_blank");
+      }
+    }
+
+    // Double-click to open
+    $icon.on("dblclick", openMyPictures);
+
+    // Attach to desktop when it exists
+    const $desktop = $(".desktop");
+    if ($desktop && $desktop.length) {
+      $desktop.append($icon);
+    } else {
+      // if desktop isn't mounted yet, wait a tick
+      setTimeout(() => $(".desktop").append($icon), 500);
+    }
+  } catch (e) {
+    console && console.error("Failed to add My Pictures icon:", e);
+  }
+})();
+// === /Custom Desktop Icon ===
+
