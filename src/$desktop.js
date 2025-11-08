@@ -107,7 +107,7 @@ $(window).on("scroll focusin", () => {
 (function () {
   try {
     const $icon = $(`
-      <div class="desktop-icon" style="position:absolute; left:20px; top:20px; width:80px; text-align:center; cursor:default;">
+      <div class="desktop-icon" style="position:absolute; left:20px; top:20px; width:90px; text-align:center; cursor:default;">
         <img draggable="false" src="images/icons/folder-open-32x32.png" width="32" height="32" alt="My Pictures">
         <div class="label" style="margin-top:4px; color:#000; text-shadow:1px 1px #fff; font-family:'MS Sans Serif', Tahoma, Arial; font-size:12px;">
           My Pictures
@@ -139,7 +139,7 @@ $(window).on("scroll focusin", () => {
 (function () {
   try {
     const $icon = $(`
-      <div class="desktop-icon" style="position:absolute; left:20px; top:120px; width:90px; text-align:center; cursor:default;">
+      <div class="desktop-icon" style="position:absolute; left:20px; top:120px; width:100px; text-align:center; cursor:default;">
         <img draggable="false" src="images/icons/favorites-folder-32x32.png" width="32" height="32" alt="Summer Camp">
         <div class="label" style="margin-top:4px; color:#000; text-shadow:1px 1px #fff; font-family:'MS Sans Serif', Tahoma, Arial; font-size:12px;">
           Summer Camp
