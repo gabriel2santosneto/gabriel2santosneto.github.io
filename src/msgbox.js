@@ -21,7 +21,7 @@ window.showMessageBox = window.showMessageBox || (({
 		$window = new $Window(Object.assign({
 			title,
 			resizable: false,
-			innerWidth: 400,
+			innerWidth: 480,
 			maximizeButton: false,
 			minimizeButton: false,
 		}, windowOptions));
@@ -30,8 +30,8 @@ window.showMessageBox = window.showMessageBox || (({
 			$("<div>").css({
 				textAlign: "left",
 				fontFamily: "MS Sans Serif, Arial, sans-serif",
-				fontSize: "14px",
-				marginTop: "22px",
+				fontSize: "16px",
+				marginTop: "24px",
 				flex: 1,
 				minWidth: 0, // Fixes hidden overflow, see https://css-tricks.com/flexbox-truncated-text/
 				whiteSpace: "normal", // overriding .window:not(.squish)
@@ -44,9 +44,14 @@ window.showMessageBox = window.showMessageBox || (({
 				wordWrap: "break-word",
 			});
 		}
+		// Determine icon path - use absolute path for root context
+		const iconPath = (typeof getIconPath !== 'undefined') 
+			? getIconPath(iconID, 32).replace('.png', '-8bpp.png')
+			: `/images/icons/${iconID}-32x32-8bpp.png`;
+		
 		$("<div>").append(
-			$("<img width='32' height='32'>").attr("src", `../../images/icons/${iconID}-32x32-8bpp.png`).css({
-				margin: "16px",
+			$("<img width='48' height='48'>").attr("src", iconPath).css({
+				margin: "20px",
 				display: "block",
 			}),
 			$message
@@ -70,9 +75,10 @@ window.showMessageBox = window.showMessageBox || (({
 				setTimeout(() => $button.focus(), 0); // @TODO: why is this needed? does it have to do with the iframe window handling?
 			}
 			$button.css({
-				minWidth: 75,
-				height: 23,
-				margin: "16px 2px",
+				minWidth: 100,
+				height: 30,
+				margin: "20px 4px",
+				fontSize: "14px",
 			});
 		}
 		$window.on("focusin", "button", (event) => {
@@ -100,3 +106,142 @@ window.showMessageBox = window.showMessageBox || (({
 window.alert = (message) => {
 	showMessageBox({ message });
 };
+
+function appendCustomMessageBoxChildren($target, content) {
+	if (content == null || content === false) {
+		return;
+	}
+	if (typeof content === "function") {
+		appendCustomMessageBoxChildren($target, content($target));
+		return;
+	}
+	if (Array.isArray(content)) {
+		content.forEach((child) => appendCustomMessageBoxChildren($target, child));
+		return;
+	}
+	if (content.jquery) {
+		$target.append(content);
+		return;
+	}
+	if (content && typeof content === "object" && "nodeType" in content) {
+		$target.append(content);
+		return;
+	}
+	$target.append(content);
+}
+
+window.showCustomMessageBox = window.showCustomMessageBox || (({
+	title = window.defaultMessageBoxTitle ?? "Windows",
+	heading,
+	headingIcon,
+	headingIconAlt = "",
+	children,
+	buttons = [{ label: "OK", value: "ok", default: true }],
+	width = 640,
+	wrapperClass = "",
+	bodyClass = "",
+	windowOptions = {},
+	playSound = true,
+} = {}) => {
+	let $window;
+	let $body;
+	const promise = new Promise((resolve) => {
+		let resolved = false;
+		const resolveOnce = (value) => {
+			if (resolved) {
+				return;
+			}
+			resolved = true;
+			resolve(value);
+		};
+
+		const computedWidth = Math.min(width, window.innerWidth ? window.innerWidth * 0.95 : width);
+
+		$window = new $Window(Object.assign({
+			title,
+			resizable: false,
+			innerWidth: computedWidth,
+			maximizeButton: false,
+			minimizeButton: false,
+		}, windowOptions));
+
+		const $contentRoot = $window.$content.empty();
+		const wrapperClasses = ["custom-msgbox", wrapperClass].filter(Boolean).join(" ");
+		const $wrapper = $("<div>").addClass(wrapperClasses).appendTo($contentRoot);
+		const $inner = $("<div>").addClass("custom-msgbox__inner").appendTo($wrapper);
+
+		if (heading || headingIcon) {
+			const $heading = $("<div>").addClass("custom-msgbox__heading").appendTo($inner);
+			if (headingIcon) {
+				const altText = headingIconAlt || heading || "";
+				$("<img>")
+					.attr({ src: headingIcon, alt: altText })
+					.appendTo($heading);
+			}
+			if (heading) {
+				$("<span>")
+					.addClass("custom-msgbox__heading-text")
+					.text(heading)
+					.appendTo($heading);
+			}
+		}
+
+		$body = $("<div>")
+			.addClass(["custom-msgbox__body", bodyClass].filter(Boolean).join(" ").trim())
+			.appendTo($inner);
+
+		appendCustomMessageBoxChildren($body, children);
+
+		if (buttons && buttons.length) {
+			const $footer = $("<div>").addClass("custom-msgbox__footer").appendTo($inner);
+			buttons.forEach((button) => {
+				const { className, disabled } = button;
+				const $btn = $("<button type='button'>")
+					.addClass(["custom-msgbox__button", className].filter(Boolean).join(" "))
+					.prop("disabled", !!disabled)
+					.text(button.label)
+					.appendTo($footer);
+
+				const handleClick = () => {
+					button.action?.();
+					resolveOnce(button.value ?? button.label ?? "ok");
+					if (button.closeOnClick !== false) {
+						$window.close();
+					}
+				};
+
+				$btn.on("click", handleClick);
+
+				if (button.default) {
+					$btn.addClass("default");
+					setTimeout(() => {
+						if (!$btn.prop("disabled")) {
+							$btn.trigger("focus");
+						}
+					}, 0);
+				}
+			});
+		}
+
+		$window.on("closed", () => {
+			resolveOnce("closed");
+		});
+
+		$window.center();
+		$window.focus();
+	});
+
+	promise.$window = $window;
+	promise.$body = $body;
+	promise.promise = promise;
+
+	if (playSound) {
+		try {
+			chord_audio.play();
+		} catch (error) {
+			console.log(`Failed to play ${chord_audio.src}: `, error);
+		}
+	}
+
+	return promise;
+});

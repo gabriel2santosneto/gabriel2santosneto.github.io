@@ -1,0 +1,43 @@
+STEM LESSON OBJECTIVES PREVIEW
+================================
+
+LEGO SPIKE Prime - Robotics Fundamentals
+-----------------------------------------
+Objective: Students will learn basic robotics programming concepts using LEGO SPIKE Prime.
+- Introduction to sensors and motors
+- Basic programming blocks and logic
+- Building and programming simple robots
+- Problem-solving through hands-on challenges
+
+VEX Robotics - Competition Preparation
+---------------------------------------
+Objective: Prepare students for robotics competitions with advanced programming skills.
+- Advanced sensor integration
+- Autonomous and driver control programming
+- Team collaboration and strategy
+- Competition rules and scoring systems
+
+AI Literacy for Kids - Introduction to Artificial Intelligence
+----------------------------------------------------------------
+Objective: Introduce age-appropriate AI concepts to elementary and middle school students.
+- What is artificial intelligence?
+- Machine learning basics through interactive activities
+- Ethical considerations in AI
+- Real-world AI applications
+
+Sphero Robotics - Coding and Movement
+--------------------------------------
+Objective: Teach coding fundamentals through Sphero robots.
+- Block-based programming introduction
+- Movement and navigation commands
+- Color and sensor integration
+- Creative coding projects
+
+Ozobot - Visual Programming
+----------------------------
+Objective: Introduce programming through visual coding with Ozobot robots.
+- Color code programming
+- Block-based coding basics
+- Line following and navigation
+- Creative storytelling with robots
+

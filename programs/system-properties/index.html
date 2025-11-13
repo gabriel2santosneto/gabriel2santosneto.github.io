@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gabriel dos Santos Properties</title>
+    <link href="../../lib/os-gui/layout.css" rel="stylesheet" type="text/css" />
+    <link
+      href="../../lib/os-gui/windows-98.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link href="../../classic.css" rel="stylesheet" type="text/css" />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "MS Sans Serif", "Segoe UI", sans-serif;
+        font-size: 16px;
+        background-color: #c0c0c0;
+        overflow: hidden;
+      }
+      .system-properties-container {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        background-color: #c0c0c0;
+        padding: 16px;
+        box-sizing: border-box;
+      }
+      .tab-bar {
+        display: flex;
+        flex-wrap: wrap;
+        background-color: #c0c0c0;
+        padding: 6px 6px 0 6px;
+        border-bottom: 1px solid #000;
+        column-gap: 2px;
+        row-gap: 4px;
+      }
+      .tab {
+        padding: 6px 18px;
+        background-color: #c0c0c0;
+        border: 2px solid #fff;
+        border-bottom: none;
+        cursor: pointer;
+        font-size: 15px;
+        user-select: none;
+        position: relative;
+        top: 1px;
+        height: 28px;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        color: #000;
+      }
+      .tab:not(.active) {
+        border-color: #fff #808080 #808080 #fff;
+      }
+      .tab.active {
+        background-color: #c0c0c0;
+        border-color: #808080 #656565 #ffffff #fefefe;
+        top: 0;
+        z-index: 1;
+        height: 30px;
+      }
+      .tab-content {
+        flex: 1;
+        padding: 24px 28px;
+        overflow-y: auto;
+        display: none;
+        min-height: 0;
+        border-left: 2px solid #ffffff;
+        border-top: 2px solid #ffffff;
+        border-right: 2px solid #000000;
+        border-bottom: 2px solid #000000;
+        background-color: #c0c0c0;
+        box-sizing: border-box;
+      }
+      .tab-content.active {
+        display: block;
+      }
+      .general-layout {
+        display: flex;
+        gap: 36px;
+        align-items: flex-start;
+      }
+      .monitor-card {
+        width: 230px;
+        height: 230px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .monitor-card img {
+        width: 190px;
+        height: auto;
+        image-rendering: pixelated;
+      }
+      .general-info {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        font-size: 16px;
+      }
+      .general-row {
+        display: flex;
+        gap: 16px;
+      }
+      .general-label {
+        width: 120px;
+        font-weight: bold;
+      }
+      .general-value {
+        flex: 1;
+        line-height: 1.4;
+      }
+      .placeholder-card {
+        background-color: #d4d0c9;
+        border: 1px solid #808080;
+        padding: 20px;
+        box-shadow: inset 1px 1px 0 #fff;
+        font-size: 16px;
+        line-height: 1.6;
+      }
+      .performance-section {
+        margin-top: 12px;
+      }
+      .performance-section h4 {
+        margin: 8px 0 4px;
+      }
+      .resource-list {
+        list-style: none;
+        padding-left: 0;
+        margin: 0;
+      }
+      .resource-list li {
+        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
+      }
+      .resource-label {
+        flex: 1;
+        display: inline-block;
+        position: relative;
+        margin-right: 8px;
+      }
+
+      .resource-label span {
+        position: relative;
+        z-index: 1;
+        background-color: #d4d0c9;
+        padding-right: 4px;
+      }
+      .resource-value {
+        white-space: nowrap;
+      }
+      .device-manager {
+        background-color: #d4d0c9;
+        border: 1px solid #808080;
+        padding: 20px;
+        box-shadow: inset 1px 1px 0 #fff;
+        font-size: 16px;
+        line-height: 1.6;
+      }
+      .device-manager ul {
+        padding-left: 18px;
+        list-style-type: disc;
+        margin: 8px 0 16px;
+      }
+      .profiles-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 16px;
+      }
+      .profiles-table th,
+      .profiles-table td {
+        border: 1px solid #808080;
+        padding: 12px;
+        text-align: left;
+        background-color: #d4d0c9;
+      }
+      .profiles-table th {
+        background-color: #c8c8c8;
+        font-weight: bold;
+      }
+      @media (max-width: 520px) {
+        .general-layout {
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+          gap: 16px;
+        }
+        .general-info {
+          width: 100%;
+          max-width: 320px;
+          text-align: left;
+        }
+        .general-row {
+          flex-direction: column;
+          gap: 4px;
+        }
+        .general-label {
+          width: auto;
+        }
+        .monitor-card {
+          width: 150px;
+          height: 150px;
+        }
+        .monitor-card img {
+          width: 130px;
+        }
+      }
+      .button-bar {
+        display: flex;
+        justify-content: flex-end;
+        padding: 10px 16px;
+        border-top: 1px solid var(--ButtonShadow);
+        background-color: #c0c0c0;
+        gap: 6px;
+        flex-shrink: 0;
+      }
+      .dialog-button {
+        min-width: 75px;
+        height: 23px;
+        font-size: 11px;
+        font-family: "MS Sans Serif", "Segoe UI", sans-serif;
+        padding: 0;
+        margin: 0;
+      }
+      .gallery-link {
+        color: #0000cc;
+        text-decoration: underline;
+        cursor: pointer;
+      }
+      .gallery-link:hover {
+        color: #551a8b;
+      }
+      .gallery-link:visited {
+        color: #551a8b;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="system-properties-container">
+      <div class="tab-bar">
+        <div class="tab active" data-tab="general">General</div>
+        <div class="tab" data-tab="device">Device Manager</div>
+        <div class="tab" data-tab="hardware">Hardware Profiles</div>
+        <div class="tab" data-tab="performance">Performance</div>
+      </div>
+
+      <!-- General Tab -->
+      <div class="tab-content active" id="tab-general">
+        <div class="general-layout">
+          <div>
+            <div class="monitor-card">
+              <img src="../../images/syspropwin.png" alt="Windows monitor" />
+            </div>
+          </div>
+          <div class="general-info">
+            <div class="general-row">
+              <div class="general-label">System:</div>
+              <div class="general-value">
+                GabrielOS 2025 — Creative Educator Edition<br />
+                Version 4.0 ∞ (Curiosity Framework Installed)
+              </div>
+            </div>
+            <div class="general-row">
+              <div class="general-label">Registered to:</div>
+              <div class="general-value">None — Available for Hire</div>
+            </div>
+            <div class="general-row">
+              <div class="general-label">Computer:</div>
+              <div class="general-value">
+                Original Human Brain<br />
+                ∞ RAM Imagination<br />
+                Multitasking Capabilities Detected<br />
+                Max 12 Kids Management Capacity (Beyond this threshold system
+                may overheat)<br />
+                Processor: Largest Human Core Available
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Device Manager Tab -->
+      <div class="tab-content" id="tab-device">
+        <div class="device-manager">
+          <h3>Installed Devices:</h3>
+          <ul>
+            <li>LEGO® Education SPIKE Prime / Essential</li>
+            <li>VEX GO / VEX IQ / Code VR Interface</li>
+            <li>Sphero RVR+ • BOLT • Indi Module Suite</li>
+            <li>Ozobot Evo / Bit+ Sensor Array</li>
+            <li>Makey Makey Interactive Board</li>
+            <li>Osmo Learning Dock</li>
+            <li>Cubelets Modular Robotics Set</li>
+            <li>Raspberry Pi Micro-Controller</li>
+            <li>BBC Micro:bit System</li>
+            <li>3D Printing Workflow (Bambu Lab A1 Combo)</li>
+            <li>Autodesk Fusion 360 Design Engine</li>
+            <li>Adobe Creative Suite (Core & Extended)</li>
+            <li>Canva / Genially Presentation Modules</li>
+            <li>React Framework (Front-End Environment)</li>
+            <li>Flask Server (Back-End Core)</li>
+            <li>Firebase Database Connector</li>
+            <li>GitHub Synchronization Service</li>
+          </ul>
+          <h4>Notes:</h4>
+          <p>
+            All devices recognized and functioning.<br />
+            Some may require spontaneous inspiration to operate correctly.<br />
+            Manual driver updates available through hands-on experimentation.
+          </p>
+        </div>
+      </div>
+
+      <!-- Hardware Profiles Tab -->
+      <div class="tab-content" id="tab-hardware">
+        <table class="profiles-table">
+          <thead>
+            <tr>
+              <th>Profile</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Educator Mode</td>
+              <td>
+                Designed for classrooms K–8. Activates patience.dll,
+                empathy.exe, and crowd-control protocols (up to 12 units
+                simultaneously).
+              </td>
+            </tr>
+            <tr>
+              <td>Consultant Mode</td>
+              <td>
+                Optimized for school systems and district projects.
+                Automatically boots proposal_generator.exe and
+                curriculum_builder.py.
+              </td>
+            </tr>
+            <tr>
+              <td>Creator Mode</td>
+              <td>
+                Night-time profile enabling Framer, Fusion 360, and infinite
+                idea threads. Memory usage high but results spectacular.
+              </td>
+            </tr>
+            <tr>
+              <td>Developer Mode</td>
+              <td>
+                Enables React + Flask stack, Firebase integration, and GitHub
+                sync at light speed.
+              </td>
+            </tr>
+            <tr>
+              <td>Presenter Mode</td>
+              <td>
+                Auto-loads slides.ppt, voice_modulator.exe, and Confidence
+                Booster 1.0 (beta).
+              </td>
+            </tr>
+            <tr>
+              <td>Vacation Mode</td>
+              <td>
+                Experimental feature. May crash after 24 hours of idleness.
+                Requires manual restart.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Performance Tab -->
+      <div class="tab-content" id="tab-performance">
+        <div class="placeholder-card">
+          <div class="performance-section">
+            <h4>System Resources:</h4>
+            <ul class="resource-list">
+              <li>
+                <span class="resource-label"><span>Curiosity</span></span
+                ><span class="resource-value">Unlimited</span>
+              </li>
+              <li>
+                <span class="resource-label"><span>Creativity</span></span
+                ><span class="resource-value">Turbo Mode</span>
+              </li>
+              <li>
+                <span class="resource-label"
+                  ><span>Energy Efficiency</span></span
+                ><span class="resource-value"
+                  >Variable (depends on coffee input)</span
+                >
+              </li>
+              <li>
+                <span class="resource-label"
+                  ><span>Problem-Solving Rate</span></span
+                ><span class="resource-value">Exceptionally High</span>
+              </li>
+              <li>
+                <span class="resource-label"><span>Patience</span></span
+                ><span class="resource-value"
+                  >Stable up to 12 Kids (max load)</span
+                >
+              </li>
+              <li>
+                <span class="resource-label"><span>Empathy Engine</span></span
+                ><span class="resource-value">Always On</span>
+              </li>
+              <li>
+                <span class="resource-label"><span>Humor Module</span></span
+                ><span class="resource-value">Auto-Triggered</span>
+              </li>
+              <li>
+                <span class="resource-label"
+                  ><span>Attention to Detail</span></span
+                ><span class="resource-value"
+                  >96% (remaining 4% used for daydreaming)</span
+                >
+              </li>
+              <li>
+                <span class="resource-label"><span>Sleep Mode</span></span
+                ><span class="resource-value">Rarely Activated</span>
+              </li>
+              <li>
+                <span class="resource-label"><span>Reboot Schedule</span></span
+                ><span class="resource-value"
+                  >Weekly (preferably on Sundays)</span
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="performance-section">
+            <h4>Virtual Memory:</h4>
+            <p>Fueled by Imagination Cache — Expands with Curiosity Usage</p>
+          </div>
+          <div class="performance-section">
+            <h4>Background Processes:</h4>
+            <ul class="resource-list">
+              <li>
+                <span class="resource-label"
+                  ><span>Idea Generator.exe</span></span
+                ><span class="resource-value"></span>
+              </li>
+              <li>
+                <span class="resource-label"
+                  ><span>Creativity Booster.dll</span></span
+                ><span class="resource-value"></span>
+              </li>
+              <li>
+                <span class="resource-label"><span>Overthinking.tmp</span></span
+                ><span class="resource-value"></span>
+              </li>
+              <li>
+                <span class="resource-label"><span>CoffeeRefill.exe</span></span
+                ><span class="resource-value">(running continuously)</span>
+              </li>
+            </ul>
+          </div>
+          <div class="performance-section">
+            <h4>Optimization Tip:</h4>
+            <p>
+              To maintain peak performance, keep creativity plugged in,
+              curiosity updated, and caffeine drivers current.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="button-bar">
+        <button class="dialog-button" id="ok-button">OK</button>
+        <button class="dialog-button" id="cancel-button">Cancel</button>
+      </div>
+    </div>
+
+    <script src="../../lib/jquery.min.js"></script>
+    <script>
+      // Tab switching
+      $(".tab").on("click", function () {
+        var tabId = $(this).data("tab");
+        $(".tab").removeClass("active");
+        $(this).addClass("active");
+        $(".tab-content").removeClass("active");
+        $("#tab-" + tabId).addClass("active");
+      });
+      // Button handlers
+      function closeWindow() {
+        try {
+          if (window.frameElement && window.frameElement.$window) {
+            window.frameElement.$window.close();
+          } else if (window.parent && window.parent.postMessage) {
+            window.parent.postMessage({ type: "closeWindow" }, "*");
+          }
+        } catch (err) {
+          console.log("Could not close window:", err);
+        }
+      }
+
+      $("#ok-button").on("click", function () {
+        closeWindow();
+      });
+
+      $("#cancel-button").on("click", function () {
+        closeWindow();
+      });
+    </script>
+  </body>
+</html>

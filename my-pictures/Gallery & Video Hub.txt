@@ -1,0 +1,18 @@
+My Pictures — Gallery & Video Hub
+==================================
+
+My Pictures is the multimedia section, housing visual content like robotics projects, camps, classroom shots, and events. It acts as a gallery window with image folders and embedded videos.
+
+Subfolders:
+-----------
+• Robotics Projects — LEGO SPIKE, VEX, Sphero builds.
+• STEM Camps — Activity highlights and team photos.
+• Classroom Activities — Students coding and building.
+• 3D Printing & Design — 3D models and final prints.
+• Events & Exhibitions — Fairs, showcases, and teacher workshops.
+• Media Highlights.txt — Captions and special mentions.
+
+Hosting:
+--------
+For performance, galleries can link to Google Drive albums or embedded YouTube/Drive videos.
+

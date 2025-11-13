@@ -65,21 +65,21 @@
 .folder-view:not([data-view-mode="DESKTOP"]):not([data-view-mode="LARGE_ICONS"]) .desktop-icon {
 	display: flex;
 	flex-direction: row;
-	width: 150px;
-	height: 17px;
+	width: 180px;
+	height: 20px;
     align-items: center;
 }
 
 .folder-view[data-view-mode="DESKTOP"] .desktop-icon,
 .folder-view[data-view-mode="LARGE_ICONS"] .desktop-icon {
-	width: 75px;
-	height: 75px;
+	width: 90px;
+	height: 90px;
 }
 .desktop-icon .title {
 	font-family: sans-serif;
 	font-family: "MS Sans Serif", "Segoe UI", sans-serif;
 	/*font-size: 10px;*/
-	font-size: 8pt;
+	font-size: 10pt;
 	background: var(--Background);
 	color: white;
 	position: relative;
@@ -95,15 +95,15 @@
 	text-align: start;
     justify-content: start;
 	white-space: nowrap;
-	height: 17px;
-	line-height: 17px;
+	height: 20px;
+	line-height: 20px;
 	padding-right: 2px;
 	padding-left: 3px;
 }
 
 .folder-view:focus-within .desktop-icon.selected:not(.renaming) .title {
-	background: var(--Hilight);
-	color: var(--HilightText);
+	background: transparent;
+	color: var(--WindowText);
 }
 .folder-view:focus-within .desktop-icon.focused:not(.renaming) .title::after {
 	content: "";
@@ -112,8 +112,8 @@
 	top: 0;
 	bottom: 0;
 	right: 0;
-	border: 1px dotted #ffffff;
-	mix-blend-mode: exclusion;
+	border: 1px dotted var(--WindowText);
+	mix-blend-mode: normal;
 }
 .folder-view .desktop-icon.renaming .title {
 	border: 1px solid var(--ButtonText); /* @TODO: is this the right theme color? */
@@ -142,7 +142,7 @@
 	opacity: 0.5;
 }
 .folder-view:focus-within .desktop-icon.selected .icon-wrapper .selection-effect {
-	display: block;
+	display: none;
 }
 .desktop-icon .icon-wrapper {
 	position: relative;
@@ -265,4 +265,90 @@
 	/* TODO: remove once this is in os-gui */
 	text-decoration-skip: none;
     text-decoration-skip-ink: none;
+}
+
+/* Custom message box (Welcome modal replacement) */
+.custom-msgbox {
+	width: 100%;
+	box-sizing: border-box;
+	font-family: "MS Sans Serif", "Segoe UI", sans-serif;
+	color: #111;
+	font-size: 16px;
+}
+
+.custom-msgbox--welcome {
+	background-color: #dcdad5;
+	border: 2px solid #000;
+	box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.35);
+	padding: 16px;
+}
+
+.custom-msgbox__inner {
+	border: 2px solid #fff;
+	border-top: none;
+	background-color: #e4e7ea;
+	padding: 20px;
+}
+
+.custom-msgbox__heading {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	font-size: 32px;
+	margin: 0 0 20px;
+}
+
+.custom-msgbox__heading img {
+	width: 40px;
+	height: 40px;
+	image-rendering: pixelated;
+	image-rendering: crisp-edges;
+}
+
+.custom-msgbox__heading-text {
+	font-weight: bold;
+}
+
+.custom-msgbox__body {
+	font-size: 18px;
+	line-height: 1.6;
+}
+
+.custom-msgbox__body p {
+	margin: 0 0 16px;
+}
+
+.custom-msgbox__body--welcome {
+	font-size: 20px;
+}
+
+.custom-msgbox__body--welcome p {
+	line-height: 1.6;
+}
+
+.custom-msgbox__footer {
+	display: flex;
+	justify-content: flex-end;
+	margin-top: 24px;
+	gap: 12px;
+}
+
+.custom-msgbox__button {
+	min-width: 100px;
+	height: 32px;
+	padding: 4px 16px;
+	font-size: 14px;
+	font-family: "MS Sans Serif", "Segoe UI", sans-serif;
+	border: 2px solid #404040;
+	background: linear-gradient(180deg, #efefef, #cacaca);
+	cursor: pointer;
+}
+
+.custom-msgbox__button.default {
+	border-color: #000;
+	box-shadow: inset 1px 1px #ffffff;
+}
+
+.custom-msgbox__button:active {
+	border-style: inset;
 }
