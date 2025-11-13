@@ -27,8 +27,8 @@
 		<link rel="prefetch" href="/programs/notepad/index.html">
 	</head>
 	<body>
-		<div class="desktop" style="background-image: url(images/lego_green.png); background-size: cover; background-position: center; display: none;"></div>
-		<div class="taskbar" style="z-index: 5000; display: none;">
+		<div class="desktop" style="background-image: url(images/lego_green.png); background-size: cover; background-position: center; opacity: 0; pointer-events: none;"></div>
+		<div class="taskbar" style="z-index: 5000; opacity: 0; pointer-events: none;">
 			<button class="start-button toggle" title="Click here to begin.">
 				<img src="images/start.png"/><b>Start</b>
 			</button>
@@ -277,8 +277,8 @@
 						// Wait for filesystem to be ready before showing desktop
 						withFilesystem(function() {
 							// Show desktop after login and filesystem is ready
-							$(".desktop").fadeIn(500);
-							$(".taskbar").fadeIn(500);
+							$(".desktop").css("pointer-events", "auto").animate({ opacity: 1 }, 500);
+							$(".taskbar").css("pointer-events", "auto").animate({ opacity: 1 }, 500);
 							
 							// Auto-open welcome window; launch IE after it closes
 							setTimeout(function() {
