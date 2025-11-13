@@ -1,9 +1,9 @@
 
-const grid_size_x_for_large_icons = 90;
-const grid_size_y_for_large_icons = 90;
+const grid_size_x_for_large_icons = 75;
+const grid_size_y_for_large_icons = 75;
 // @TODO: this is supposed to be dynamic based on length of names
-const grid_size_x_for_small_icons = 180;
-const grid_size_y_for_small_icons = 20;
+const grid_size_x_for_small_icons = 150;
+const grid_size_y_for_small_icons = 17;
 
 window.resetAllFolderCustomizations = () => {
 	for (let i = 0; i < localStorage.length; i++) {
@@ -85,9 +85,10 @@ const system_folder_path_to_name = {
 	"/": "(C:)", //"My Computer",
 	"/my-pictures/": "My Pictures",
 	"/my-documents/": "My Documents",
+	"/network-neighborhood/": "Network Neighborhood",
 	"/desktop/": "Desktop",
 	"/programs/": "Program Files",
-	"/playground/": "Playground",
+	"/recycle-bin/": "Recycle Bin",
 };
 const system_folder_name_to_path = Object.fromEntries(
 	Object.entries(system_folder_path_to_name).map(([key, value]) => [value, key])
@@ -95,44 +96,6 @@ const system_folder_name_to_path = Object.fromEntries(
 const system_folder_lowercase_name_to_path = Object.fromEntries(
 	Object.entries(system_folder_name_to_path).map(([key, value]) => [key.toLowerCase(), value])
 );
-
-const normalizeProgramShortcutName = (name = "") =>
-	name
-		.toLowerCase()
-		.replace(/[-_]+/g, " ")
-		.replace(/\s+/g, " ")
-		.trim();
-
-const programShortcutIconMap = {
-	"paint": "paint",
-	"mspaint": "paint",
-	"minesweeper": "minesweeper",
-	"solitaire": "solitaire",
-	"pinball": "pinball",
-	"winamp": "winamp2",
-	"sound recorder": "speaker",
-	"sound-recorder": "speaker",
-	"soundrecorder": "speaker",
-	"pipes": "pipes",
-	"3d pipes": "pipes",
-	"3d flower box": "pipes",
-	"flowerbox": "pipes",
-	"junkbot": "tools-folder",
-	"calculator": "calculator",
-	"notepad": "notepad",
-	"ms-dos prompt": "msdos",
-	"msdos": "msdos",
-	"ms dos prompt": "msdos",
-	"command prompt": "msdos",
-};
-
-const SPECIAL_FOLDER_ICONS = [
-	{
-		match: (file_path) =>
-			file_path?.toLowerCase().includes("playground l!swm+iiccpyxg@22.yrmyf"),
-		iconID: "playground",
-	},
-];
 
 
 const set_dragging_file_paths = (dragging_file_paths) => {
@@ -437,24 +400,21 @@ function FolderView(folder_path, { asDesktop = false, onStatus, openFolder, open
 	};
 
 	// Read the folder and create icon items
-	// Skip filesystem read for My Computer (root folder) - virtual drives will be added by Explorer
-	if (folder_path !== "/") {
-		withFilesystem(function () {
-			var fs = BrowserFS.BFSRequire('fs');
-			fs.readdir(folder_path, function (error, contents) {
-				if (error) {
-					alert("Failed to read contents of the directory " + folder_path);
-					throw error;
-				}
+	withFilesystem(function () {
+		var fs = BrowserFS.BFSRequire('fs');
+		fs.readdir(folder_path, function (error, contents) {
+			if (error) {
+				alert("Failed to read contents of the directory " + folder_path);
+				throw error;
+			}
 
-				for (var i = 0; i < contents.length; i++) {
-					var fname = contents[i];
-					add_fs_item(fname, -1000, -1000);
-				}
-				self.arrange_icons();
-			});
+			for (var i = 0; i < contents.length; i++) {
+				var fname = contents[i];
+				add_fs_item(fname, -1000, -1000);
+			}
+			self.arrange_icons();
 		});
-	}
+	});
 
 	// NOTE: in Windows, icons by default only get moved if they go offscreen (by maybe half the grid size)
 	// we're handling it as if Auto Arrange is on (@TODO: support Auto Arrange off)
@@ -829,16 +789,6 @@ function FolderView(folder_path, { asDesktop = false, onStatus, openFolder, open
 	};
 	var icon_id_from_stats_and_path = function (stats, file_path) {
 		if (stats.isDirectory()) {
-			const special = SPECIAL_FOLDER_ICONS.find(({ match }) => {
-				try {
-					return match(file_path);
-				} catch (error) {
-					return false;
-				}
-			});
-			if (special) {
-				return special.iconID;
-			}
 			// if extending this to different folder icons,
 			// note that "folder" is relied on (for sorting)
 			return "folder";
@@ -849,9 +799,6 @@ function FolderView(folder_path, { asDesktop = false, onStatus, openFolder, open
 		return icon_name || "document";
 	};
 	var icons_from_icon_id = function (icon_id) {
-		if (!icon_id) {
-			return null;
-		}
 		return {
 			16: getIconPath(icon_id, 16),
 			32: getIconPath(icon_id, 32),
@@ -859,46 +806,11 @@ function FolderView(folder_path, { asDesktop = false, onStatus, openFolder, open
 		};
 	};
 
-	const maybe_set_program_shortcut_icon = (item) => {
-		if (!item.file_path?.toLowerCase().endsWith(".url")) {
-			return;
-		}
-		let fs;
-		try {
-			fs = BrowserFS.BFSRequire("fs");
-		} catch (error) {
-			return;
-		}
-		fs.readFile(item.file_path, "utf8", (error, content) => {
-			if (error || !content) {
-				return;
-			}
-			const match = content.match(/URL\s*=\s*program:([^\n\r]+)/i);
-			if (!match) {
-				return;
-			}
-			const iconID = programShortcutIconMap[normalizeProgramShortcutName(match[1])];
-			if (!iconID) {
-				return;
-			}
-			const icons = icons_from_icon_id(iconID);
-			if (!icons) {
-				return;
-			}
-			item.setIcons(icons);
-		});
-	};
-
 	// var add_fs_item = function(file_path, x, y){
 	var add_fs_item = function (initial_file_name, x, y) {
 		var initial_file_path = folder_path + initial_file_name;
-		const is_url_shortcut = initial_file_name.toLowerCase().endsWith(".url");
-		const display_title = is_url_shortcut ? initial_file_name.replace(/\.url$/i, "") : initial_file_name;
-		const normalize_display_name = (name) => name.replace(/\.url$/ig, "");
-		const get_filesystem_name = (name) => is_url_shortcut ? `${normalize_display_name(name)}.url` : name;
-
 		var item = new FolderViewItem({
-			title: display_title,
+			title: initial_file_name,
 			open: async function () {
 				if (openFolder) {
 					let stats = item.resolvedStats;
@@ -927,26 +839,20 @@ function FolderView(folder_path, { asDesktop = false, onStatus, openFolder, open
 				alert(`No handler for opening files or folders.`);
 			},
 			rename: (new_name) => {
-				const sanitized_display_name = normalize_display_name(new_name);
-				const filesystem_name = get_filesystem_name(new_name);
 				var fs = BrowserFS.BFSRequire('fs');
 				return new Promise(function (resolve, reject) {
-					const new_file_path = folder_path + filesystem_name;
+					const new_file_path = folder_path + new_name;
 					fs.rename(item.file_path, new_file_path, function (err) {
 						if (err) {
 							return reject(err);
 						}
 						resolve();
 						item.file_path = new_file_path;
-						item.title = sanitized_display_name;
+						item.title = new_name;
 						item.element.dataset.filePath = new_file_path;
 						if (item.resolvedStats) {
 							const icon_id = icon_id_from_stats_and_path(item.resolvedStats, new_file_path);
-							const icons = icons_from_icon_id(icon_id);
-							if (icons) {
-								item.setIcons(icons);
-							}
-							maybe_set_program_shortcut_icon(item);
+							item.setIcons(icons_from_icon_id(icon_id));
 						} // else the icon will be updated when the stats are resolved
 					});
 				});
@@ -961,11 +867,7 @@ function FolderView(folder_path, { asDesktop = false, onStatus, openFolder, open
 			item.resolvedStats = stats; // trying to indicate in the name the async nature
 			// @TODO: know which sizes are available
 			const icon_id = icon_id_from_stats_and_path(stats, item.file_path);
-			const icons = icons_from_icon_id(icon_id);
-			if (icons) {
-				item.setIcons(icons);
-			}
-			maybe_set_program_shortcut_icon(item);
+			item.setIcons(icons_from_icon_id(icon_id));
 		}, (error) => {
 			// Without this, the folder view infinitely recursed arranging items because
 			// it was waiting for the promise to be settled (resolved or rejected),
@@ -1017,7 +919,7 @@ function FolderView(folder_path, { asDesktop = false, onStatus, openFolder, open
 	$folder_view.on("drop", function (e) {
 		e.preventDefault();
 		var x = e.originalEvent.pageX || dragover_pageX;
-		var y = e.originalEvent.pageY || dragover_pageY;
+		var y = e.originalEvent.pageY || e.dragover_pageY
 		// TODO: handle dragging icons onto other icons
 		withFilesystem(function () {
 			var files = e.originalEvent.dataTransfer.files;

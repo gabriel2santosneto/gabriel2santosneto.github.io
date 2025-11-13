@@ -17,11 +17,6 @@ function FolderViewItem(options) {
 	var $title = $("<div class='title'/>").text(options.title);
 	var $icon;
 	$container.append($icon_wrapper, $title);
-	
-	// Add tooltip if provided
-	if (options.tooltip) {
-		$container.attr("title", options.tooltip);
-	}
 
 	// TODO: handle the loading state display in some intentional way
 

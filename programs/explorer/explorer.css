@@ -83,54 +83,11 @@ body {
 #address-bar,
 #standard-buttons,
 #internet-buttons,
-#custom-portfolio-nav,
-#standard-internet-buttons,
-#landing-page-nav-buttons,
 .menus {
 	flex: 0 0 auto;
 	display: flex;
 	flex-direction: row;
 	align-items: center;
-}
-
-.custom-nav-button {
-	width: auto !important;
-	min-width: 54px;
-	padding: 0 8px;
-	white-space: nowrap;
-}
-
-.custom-nav-button .icon {
-	background-image: none !important;
-}
-.custom-nav-button img.icon {
-	background-image: none !important;
-	object-fit: contain;
-}
-
-.custom-nav-button .label-text {
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	max-width: 100px;
-}
-
-.custom-nav-button.active {
-	background-color: var(--ButtonHilight);
-	color: var(--ButtonText);
-}
-
-/* Remove hover and active background effects for custom nav buttons */
-.custom-nav-button:enabled:hover {
-	background-color: var(--ButtonFace) !important;
-	border-color: var(--ButtonHilight) var(--ButtonShadow) var(--ButtonShadow) var(--ButtonHilight) !important;
-}
-
-.custom-nav-button:enabled:hover:active,
-.custom-nav-button.pressing,
-.custom-nav-button.pressed {
-	background-color: var(--ButtonFace) !important;
-	border-color: var(--ButtonShadow) var(--ButtonHilight) var(--ButtonHilight) var(--ButtonShadow) !important;
 }
 #address-bar {
 	flex: 1;
@@ -245,12 +202,6 @@ button {
 .toolbar-compound-button-wrapper:hover .toolbar-button:enabled .icon {
 	background-image: url("../../images/browse-ui-icons.png");
 }
-.custom-nav-button .icon {
-	background-image: inherit !important;
-}
-.custom-nav-button:enabled:hover .icon {
-	background-image: inherit !important;
-}
 .toolbar-button:disabled .icon,
 #address-dropdown-button:disabled svg,
 .toolbar-dropdown-button:disabled svg {
@@ -298,16 +249,10 @@ button {
 	color: var(--WindowText);
 	min-width: 0;
 	min-height: 0;
-	overflow: hidden; /* Changed to hidden for iframe */
-	position: relative;
 }
 #content iframe {
 	flex: 1;
 	min-width: 0;
 	min-height: 0;
-	border: 0;
-	width: 100%;
-	height: 100%;
-	display: block;
-	overflow: hidden; /* Ensure iframe doesn't add scrollbars */
+    border: 0;
 }

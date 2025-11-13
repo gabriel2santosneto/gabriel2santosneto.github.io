@@ -8,9 +8,6 @@
 		<link href="lib/os-gui/windows-98.css" rel="stylesheet" type="text/css">
 		<link href="lib/clippy.js/build/clippy.css" rel="stylesheet" type="text/css">
 		<link href="classic.css" rel="stylesheet" type="text/css">
-		<link rel="preconnect" href="https://fonts.googleapis.com">
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
 		<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=LbWArJzeO7">
 		<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=LbWArJzeO7">
 		<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=LbWArJzeO7">
@@ -24,11 +21,12 @@
 		<meta name="viewport" content="width=device-width, user-scalable=no">
 		<!-- For WayBack Machine, hopefully get it to save these resources -->
 		<link rel="prefetch" href="/filesystem-index.json">
+		<link rel="prefetch" href="/desktop/CREDITS.txt">
 		<link rel="prefetch" href="/programs/notepad/index.html">
 	</head>
 	<body>
-		<div class="desktop" style="background-image: url(images/clouds.jpg); background-size: cover; background-position: center; display: none;"></div>
-		<div class="taskbar" style="z-index: 5000; display: none;">
+		<div class="desktop" style="background-image: url(images/clouds.jpg); background-size: cover; background-position: center;"></div>
+		<div class="taskbar" style="z-index: 5000;">
 			<button class="start-button toggle" title="Click here to begin.">
 				<img src="images/start.png"/><b>Start</b>
 			</button>
@@ -45,176 +43,11 @@
 			</div>
 		</div>
 		<div class="start-menu outset-deep" hidden style="display: none; z-index: 5001;">
-			<div class="start-menu-titlebar">
-				<div class="start-menu-titlebar-text">
-					<span class="windows-text">Windows</span>
-					<span class="windows-number">98</span>
-				</div>
-			</div>
+			<div class="start-menu-titlebar"></div>
 			<div class="start-menu-content">
-				<ul class="start-menu-list">
-					<li class="start-menu-item has-submenu" data-submenu="programs">
-						<img class="menu-icon" src="images/icons/programs-folder-16x16.png" alt="">
-						<span class="menu-label">Programs</span>
-						<span class="menu-arrow">▶</span>
-					</li>
-					<li class="start-menu-item has-submenu" data-submenu="resources">
-						<img class="menu-icon" src="images/icons/my-documents-folder-16x16.png" alt="">
-						<span class="menu-label">Resources</span>
-						<span class="menu-arrow">▶</span>
-					</li>
-					<li class="start-menu-item has-submenu" data-submenu="discover">
-						<img class="menu-icon" src="images/icons/find-folder-16x16.png" alt="">
-						<span class="menu-label">Discover More</span>
-						<span class="menu-arrow">▶</span>
-					</li>
-					<li class="start-menu-item has-submenu" data-submenu="conversation">
-						<img class="menu-icon" src="images/icons/mail-16x16.png" alt="">
-						<span class="menu-label">Conversation</span>
-						<span class="menu-arrow">▶</span>
-					</li>
-					<li class="start-menu-item has-submenu" data-submenu="help">
-						<img class="menu-icon" src="images/icons/help-16x16.png" alt="">
-						<span class="menu-label">Help</span>
-						<span class="menu-arrow">▶</span>
-					</li>
-					<li class="start-menu-divider"></li>
-					<li class="start-menu-item has-submenu" data-submenu="shutdown">
-						<img class="menu-icon" src="images/icons/shutdown-16x16.png" alt="">
-						<span class="menu-label">Shut Down</span>
-						<span class="menu-arrow">▶</span>
-					</li>
-				</ul>
-				
-				<!-- Submenus -->
-					<div class="start-submenu" id="submenu-programs" style="display: none;">
-						<ul>
-							<li class="submenu-item" data-action="welcome-portfolio">
-								<img class="submenu-icon" src="images/icons/favorites-16x16.png" alt="">
-								<span class="submenu-label">Welcome to my Portfolio</span>
-							</li>
-							<li class="submenu-item" data-action="curriculum">
-								<img class="submenu-icon" src="images/icons/document-16x16.png" alt="">
-								<span class="submenu-label">Afterschool Program</span>
-						</li>
-						<li class="submenu-item" data-action="summer-camps">
-							<img class="submenu-icon" src="images/icons/folder-16x16.png" alt="">
-							<span class="submenu-label">Summer Camps</span>
-						</li>
-						<li class="submenu-item" data-action="robotics">
-							<img class="submenu-icon" src="images/icons/tools-folder-16x16.png" alt="">
-							<span class="submenu-label">Robotics & Coding</span>
-						</li>
-						<li class="submenu-item" data-action="ai">
-							<img class="submenu-icon" src="images/icons/paint-16x16.png" alt="">
-							<span class="submenu-label">Game Design / AI / 3D Printing</span>
-						</li>
-						<li class="submenu-item" data-action="book-workshop">
-							<img class="submenu-icon" src="images/icons/contact-16x16.png" alt="">
-							<span class="submenu-label">Book a Workshop</span>
-						</li>
-					</ul>
-				</div>
-				
-				<div class="start-submenu" id="submenu-resources" style="display: none;">
-					<ul>
-						<li class="submenu-item" data-action="curriculum-overview">
-							<img class="submenu-icon" src="images/icons/document-16x16.png" alt="">
-							<span class="submenu-label">Curriculum Overview</span>
-						</li>
-						<li class="submenu-item" data-action="lesson-samples">
-							<img class="submenu-icon" src="images/icons/document-16x16.png" alt="">
-							<span class="submenu-label">Lesson Samples</span>
-						</li>
-						<li class="submenu-item" data-action="case-studies">
-							<img class="submenu-icon" src="images/icons/case-studies-16x16.png" alt="">
-							<span class="submenu-label">Case Studies</span>
-						</li>
-						<li class="submenu-divider"></li>
-						<li class="submenu-item has-submenu" data-submenu="settings">
-							<img class="submenu-icon" src="images/icons/settings-16x16.png" alt="">
-							<span class="submenu-label">Settings</span>
-							<span class="submenu-arrow">▶</span>
-						</li>
-					</ul>
-				</div>
-				
-				<div class="start-submenu" id="submenu-settings" style="display: none;">
-					<ul>
-						<li class="submenu-item" data-action="skills-tools">
-							<img class="submenu-icon" src="images/icons/tools-folder-16x16.png" alt="">
-							<span class="submenu-label">Skills / Tools</span>
-						</li>
-					</ul>
-				</div>
-				
-				<div class="start-submenu" id="submenu-discover" style="display: none;">
-					<ul>
-						<li class="submenu-item" data-action="portfolio">
-							<img class="submenu-icon" src="images/icons/folder-16x16.png" alt="">
-							<span class="submenu-label">Portfolio</span>
-						</li>
-						<li class="submenu-item" data-action="framework">
-							<img class="submenu-icon" src="images/icons/document-16x16.png" alt="">
-							<span class="submenu-label">STEM Creation Framework</span>
-						</li>
-						<li class="submenu-item" data-action="partners">
-							<img class="submenu-icon" src="images/icons/network-16x16.png" alt="">
-							<span class="submenu-label">Partner Schools</span>
-						</li>
-					</ul>
-				</div>
-				
-				<div class="start-submenu" id="submenu-conversation" style="display: none;">
-					<ul>
-						<li class="submenu-item" data-action="message-gabriel">
-							<img class="submenu-icon" src="images/icons/mail-16x16.png" alt="">
-							<span class="submenu-label">Message Gabriel</span>
-						</li>
-						<li class="submenu-item" data-action="schedule-call">
-							<img class="submenu-icon" src="images/icons/contact-16x16.png" alt="">
-							<span class="submenu-label">Schedule a Call</span>
-						</li>
-						<li class="submenu-item" data-action="collaborate">
-							<img class="submenu-icon" src="images/icons/network-16x16.png" alt="">
-							<span class="submenu-label">Collaborate with Me</span>
-						</li>
-					</ul>
-				</div>
-				
-				<div class="start-submenu" id="submenu-help" style="display: none;">
-					<ul>
-						<li class="submenu-item" data-action="teacher-training">
-							<img class="submenu-icon" src="images/icons/help-16x16.png" alt="">
-							<span class="submenu-label">Teacher Training</span>
-						</li>
-						<li class="submenu-item" data-action="robotics-setup">
-							<img class="submenu-icon" src="images/icons/settings-16x16.png" alt="">
-							<span class="submenu-label">Robotics Program Setup</span>
-						</li>
-						<li class="submenu-item" data-action="curriculum-consultation">
-							<img class="submenu-icon" src="images/icons/document-16x16.png" alt="">
-							<span class="submenu-label">Curriculum Consultation</span>
-						</li>
-						<li class="submenu-item" data-action="book-intro-call">
-							<img class="submenu-icon" src="images/icons/contact-16x16.png" alt="">
-							<span class="submenu-label">Book Intro Call</span>
-						</li>
-					</ul>
-				</div>
-				
-				<div class="start-submenu" id="submenu-shutdown" style="display: none;">
-					<ul>
-						<li class="submenu-item" data-action="take-break">
-							<img class="submenu-icon" src="images/icons/sleep-16x16.png" alt="">
-							<span class="submenu-label">Take a Break (Visit Gallery)</span>
-						</li>
-						<li class="submenu-item" data-action="launch-universe">
-							<img class="submenu-icon" src="images/icons/run-16x16.png" alt="">
-							<span class="submenu-label">Launch My STEM Universe</span>
-						</li>
-					</ul>
-				</div>
+				<h1 style="font-family: cursive; font-size: 2em;">’S tart</h1>
+				<h2 style="font-family: cursive; font-size: 1em; color: gray; margin: 0; margin-left: 300px; white-space: nowrap;">’s a strawberry tart</h1>
+				<img src="https://i.postimg.cc/dtxsJq0d/CK1IhDr.gif"/>
 			</div>
 		</div>
 		<script src="lib/jquery.min.js"></script>
@@ -228,22 +61,6 @@
 		<script>defaultMessageBoxTitle = "Windows";</script>
 		<script src="src/3d-fun.js"></script>
 		<script src="src/helpers.js"></script>
-		<script>
-			// Handle messages from iframe windows (like System Properties)
-			window.addEventListener("message", function(event) {
-				if (event.data && event.data.type === 'openGallery') {
-					if (typeof systemExecuteFile !== 'undefined') {
-						systemExecuteFile("/my-pictures/");
-					}
-				} else if (event.data && event.data.type === 'openContact') {
-					if (typeof openPortfolioExplorer === 'function') {
-						openPortfolioExplorer("contact");
-					} else if (typeof Explorer !== 'undefined') {
-						Explorer("programs/landing/index.html#contact");
-					}
-				}
-			});
-		</script>
 		<script src="src/filesystem-setup.js"></script>
 		<script src="src/iframe-windows.js"></script>
 		<script src="src/Task.js"></script>
@@ -254,50 +71,7 @@
 		<script src="src/$desktop.js"></script>
 		<script src="src/window-switcher.js"></script>
 		<script src="src/visualizer-overlay.js"></script>
-		<script src="src/boot-screen.js"></script>
-		<script src="src/login-screen.js"></script>
 		<script src="src/programs.js"></script>
-		<script>
-			// Initialize boot sequence
-			$(document).ready(function() {
-				const launchLandingPage = () => {
-					if (launchLandingPage._didLaunch) {
-						return;
-					}
-					launchLandingPage._didLaunch = true;
-					if (typeof openPortfolioExplorer === "function") {
-						openPortfolioExplorer("hero");
-					} else {
-						Explorer("programs/landing/index.html");
-					}
-				};
-
-				showBootScreen(function() {
-					showLoginScreen(function(username) {
-						// Wait for filesystem to be ready before showing desktop
-						withFilesystem(function() {
-							// Show desktop after login and filesystem is ready
-							$(".desktop").fadeIn(500);
-							$(".taskbar").fadeIn(500);
-							
-							// Auto-open welcome window; launch IE after it closes
-							setTimeout(function() {
-								const welcomeTask = typeof openWelcomeWindow === "function"
-									? openWelcomeWindow()
-									: Explorer("programs/welcome/index.html");
-								if (welcomeTask && welcomeTask.$window && typeof welcomeTask.$window.onClosed === "function") {
-									welcomeTask.$window.onClosed(() => {
-										launchLandingPage();
-									});
-								} else {
-									launchLandingPage();
-								}
-							}, 500);
-						});
-					});
-				});
-			});
-		</script>
 
 		<!-- TODO: DRY -->
 		<svg style="position: absolute; pointer-events: none; bottom: 100%;">
