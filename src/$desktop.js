@@ -16,7 +16,7 @@ function setDesktopWallpaper(file, repeat, saveToLocalStorage) {
 		backgroundImage: `url(${blob_url})`,
 		backgroundRepeat: repeat,
 		backgroundPosition: "center",
-		backgroundSize: "auto",
+		backgroundSize: "cover",
 	});
 	if (saveToLocalStorage) {
 		var fr = new FileReader();
