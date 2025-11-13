@@ -53,13 +53,16 @@ BrowserFS.configure({
 });
 
 setTimeout(function () {
-	__fs_timed_out = true;
-	if (__fs_waiting_callbacks.length) {
-		// TODO: DRY (can probably simplify this logic significantly)
-		alert("The filesystem is not working.");
+	if (!__fs_initialized && !__fs_errored) {
+		__fs_timed_out = true;
+		if (__fs_waiting_callbacks.length) {
+			debugger;
+			// TODO: DRY (can probably simplify this logic significantly)
+			alert("The filesystem is not working.");
+		}
+		__fs_waiting_callbacks = [];
 	}
-	__fs_waiting_callbacks = [];
-}, 5000);
+}, 10000); // Increased timeout to 10 seconds
 
 function withFilesystem(callback) {
 	if (__fs_initialized) {

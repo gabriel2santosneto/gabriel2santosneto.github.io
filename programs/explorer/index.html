@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>Explorer</title>
+		<title>Portfolio Explorer</title>
 		<link href="../../layout.css" rel="stylesheet" type="text/css">
 		<link href="../../classic.css" rel="stylesheet" type="text/css">
 		<link href="../../lib/os-gui/layout.css" rel="stylesheet" type="text/css">
@@ -17,7 +17,7 @@
 		<script src="../../lib/os-gui/$Window.js"></script>
 		<script src="../../src/msgbox.js"></script>
 		<script src="../../src/iframe-windows.js"></script>
-		<script>defaultMessageBoxTitle = "Explorer";</script>
+		<script>defaultMessageBoxTitle = "Portfolio Explorer";</script>
 		<script src="../../src/helpers.js"></script>
 		<script src="../../src/FolderView.js"></script>
 		<script src="../../src/FolderViewItem.js"></script>
@@ -84,39 +84,78 @@
 			</div>
 		</div>
 		<div id="internet-buttons" style="display: none;">
-			<div class="toolbar-compound-button-wrapper">
-				<button class="toolbar-button lightweight back-button" disabled>
-					<span class="label-text">Back</span>
+			<!-- Back/Forward buttons for landing page navigation -->
+			<div id="landing-page-nav-buttons" style="display: none;">
+				<div class="toolbar-compound-button-wrapper">
+					<button class="toolbar-button lightweight back-button" disabled>
+						<span class="label-text">Back</span>
+					</button>
+					<button class="toolbar-dropdown-button lightweight back-dropdown-button" disabled>
+						<svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" style="fill:currentColor;display:inline-block;vertical-align:middle"><path style="transform:rotate(90deg);transform-origin:center" d="m6 4 4 4-4 4z"></path></svg>
+					</button>
+				</div>
+				<div class="toolbar-compound-button-wrapper">
+					<button class="toolbar-button lightweight forward-button" disabled>
+						<span class="label-text">Forward</span>
+					</button>
+					<button class="toolbar-dropdown-button lightweight forward-dropdown-button" disabled>
+						<svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" style="fill:currentColor;display:inline-block;vertical-align:middle"><path style="transform:rotate(90deg);transform-origin:center" d="m6 4 4 4-4 4z"></path></svg>
+					</button>
+				</div>
+				<hr aria-orientation="vertical">
+			</div>
+			<!-- Portfolio Explorer Toolbar -->
+			<div id="custom-portfolio-nav" style="display: none;">
+				<button class="toolbar-button lightweight portfolio-toolbar-button stop-button">
+					<span class="label-text">Stop</span>
 				</button>
-				<button class="toolbar-dropdown-button lightweight back-dropdown-button" disabled>
-					<svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" style="fill:currentColor;display:inline-block;vertical-align:middle"><path style="transform:rotate(90deg);transform-origin:center" d="m6 4 4 4-4 4z"></path></svg>
+				<button class="toolbar-button lightweight portfolio-toolbar-button refresh-button">
+					<span class="label-text">Refresh</span>
+				</button>
+				<button class="toolbar-button lightweight portfolio-toolbar-button download-button">
+					<span class="label-text">Download</span>
+				</button>
+				<button class="toolbar-button lightweight portfolio-toolbar-button home-button">
+					<span class="label-text">Home</span>
+				</button>
+				<button class="toolbar-button lightweight portfolio-toolbar-button bookmark-button">
+					<span class="label-text">Bookmark</span>
+				</button>
+				<button class="toolbar-button lightweight portfolio-toolbar-button fullscreen-button">
+					<span class="label-text">Fullscreen</span>
+				</button>
+				<button class="toolbar-button lightweight portfolio-toolbar-button print-button">
+					<span class="label-text">Print</span>
 				</button>
 			</div>
-			<div class="toolbar-compound-button-wrapper">
-				<button class="toolbar-button lightweight forward-button" disabled>
-					<span class="label-text">Forward</span>
-				</button>
-				<button class="toolbar-dropdown-button lightweight forward-dropdown-button" disabled>
-					<svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" style="fill:currentColor;display:inline-block;vertical-align:middle"><path style="transform:rotate(90deg);transform-origin:center" d="m6 4 4 4-4 4z"></path></svg>
-				</button>
+			<!-- Standard IE Buttons (hidden for portfolio) -->
+			<div id="standard-internet-buttons">
+				<div class="toolbar-compound-button-wrapper">
+					<button class="toolbar-button lightweight back-button" disabled>
+						<span class="label-text">Back</span>
+					</button>
+					<button class="toolbar-dropdown-button lightweight back-dropdown-button" disabled>
+						<svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" style="fill:currentColor;display:inline-block;vertical-align:middle"><path style="transform:rotate(90deg);transform-origin:center" d="m6 4 4 4-4 4z"></path></svg>
+					</button>
+				</div>
+				<div class="toolbar-compound-button-wrapper">
+					<button class="toolbar-button lightweight forward-button" disabled>
+						<span class="label-text">Forward</span>
+					</button>
+					<button class="toolbar-dropdown-button lightweight forward-dropdown-button" disabled>
+						<svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" style="fill:currentColor;display:inline-block;vertical-align:middle"><path style="transform:rotate(90deg);transform-origin:center" d="m6 4 4 4-4 4z"></path></svg>
+					</button>
+				</div>
+				<button class="toolbar-button lightweight stop-button"><span class="label-text">Stop</span></button>
+				<button class="toolbar-button lightweight refresh-button"><span class="label-text">Refresh</span></button>
+				<button class="toolbar-button lightweight home-button"><span class="label-text">Home</span></button>
+				<hr aria-orientation="vertical">
+				<button class="toolbar-button lightweight toggle search-button"><span class="label-text">Search</span></button>
+				<button class="toolbar-button lightweight toggle favorites-button"><span class="label-text">Favorites</span></button>
+				<button class="toolbar-button lightweight toggle history-button"><span class="label-text">History</span></button>
+				<hr aria-orientation="vertical">
+				<button class="toolbar-button lightweight print-button"><span class="label-text">Print</span></button>
 			</div>
-			<button class="toolbar-button lightweight stop-button"><span class="label-text">Stop</span></button>
-			<button class="toolbar-button lightweight refresh-button"><span class="label-text">Refresh</span></button>
-			<button class="toolbar-button lightweight home-button"><span class="label-text">Home</span></button>
-			<hr aria-orientation="vertical">
-			<button class="toolbar-button lightweight toggle search-button"><span class="label-text">Search</span></button>
-			<button class="toolbar-button lightweight toggle favorites-button"><span class="label-text">Favorites</span></button>
-			<button class="toolbar-button lightweight toggle history-button"><span class="label-text">History</span></button>
-			<!-- <div class="toolbar-compound-button-wrapper">
-				<button class="toolbar-button lightweight mail-button" disabled>
-					<span class="label-text">Mail</span>
-				</button>
-				<button class="toolbar-dropdown-button lightweight mail-dropdown-button" disabled>
-					<svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" style="fill:currentColor;display:inline-block;vertical-align:middle"><path style="transform:rotate(90deg);transform-origin:center" d="m6 4 4 4-4 4z"></path></svg>
-				</button>
-			</div> -->
-			<hr aria-orientation="vertical">
-			<button class="toolbar-button lightweight print-button"><span class="label-text">Print</span></button>
 		</div>
 		</div>
 		<div class="toolbar" id="address-bar-toolbar">

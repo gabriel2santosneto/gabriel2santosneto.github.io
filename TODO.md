@@ -1,33 +1,48 @@
+# Retro OS Portfolio Project Plan
 
-# ![](images/icons/shutdown-32x32.png) Todo
+## Overview
+This document outlines the task breakdown for transforming Gabriel dos Santos’s portfolio website into an interactive, retro Windows 98 style experience. Extracted from the provided project overview PDF.
 
-* Add more libraries to CREDITS.txt, and possibly include (or at least mention) licenses
+## High Level Phases
+1. UX / UI Mapping (structure + flows)
+2. Core Engine Development
+3. Content Implementation
+4. Final Polish / SFX / QA / Deploy
 
-* *Properly* link to the repo from within the app, not just with a URL in a virtual text file
+## Detailed Tasks
 
-* Start Menu
+### Phase 1 — UX / System Architecture
+- Define all screens and transitions (Boot → Login → Landing → Explorer)
+- Define window manager structure (draggable windows, resizing, close)
+- Define file tree + desktop drive structure
+- Build design style guide (98 theme elements)
 
-	* Aria attributes
+### Phase 2 — Base Engine Build
+- Implement Boot Screen
+- Implement Login Screen
+- Implement Landing Page (Fake Google layout)
+- Implement IE Navigation bar with all sections
+- Implement Desktop + My Computer
+- Implement Window system (open, close, z-index, minimize, resize)
 
-	* "Legitimate content"
+### Phase 3 — Section Buildout
+- My Computer drives implementation
+- My Documents section
+- My Pictures gallery linkage + external hosting if needed
+- Junkbot Game launcher
+- Winamp Player UI
 
-* File save and open dialogs
+### Phase 4 — Final Polish & Delivery
+- Add retro sound effects
+- Responsive adjustments
+- README for client updates
+- Deployment
 
-* Integrate Paint better
+## Proposed Milestones
 
-	* Windows that pop out; will need to display graphics via data URIs or canvases, and rely only on inline styles (or `<style scoped>`?) and the shared styles
-
-		* Could *maybe* use [`<base>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base) for `<img>`s, but all styles (that aren't shared) would have to be inline, and I think it would be better just to try to make everything canvases
-
-* Integrate Blue Screen of Death similar to http://fakebsod.com/generic
-
-	* Press <kbd>~</kbd> or something to bluescreen
-
-	* Prankily wait for next user input before fullscreening and bluescreening
-
-* Try integrating arbitrary applications by emulating Windows 98 on the webpage [with v86](https://github.com/copy/v86/blob/master/docs/api.md),
-with an X server installed in the VM, and acting as an X client externally??
-And integrating a virtual filesystem??
-That would be undoubtedly cool, but idk how hard it might be,
-and especially what data channels are available between the VM and the host.
-Partially [inspired by OS.js](https://www.youtube.com/watch?v=c0safRR0ldM&index=16&list=PL74DE0E481419C259).
+| Milestone | Scope | Estimate |
+|----------|--------|----------|
+| M1 Architecture + UX | Phase 1 | 4-6h |
+| M2 Core Engine | Phase 2 | 12-18h |
+| M3 Content Impl | Phase 3 | 10-14h |
+| M4 Polish + Deploy | Phase 4 | 6-10h |

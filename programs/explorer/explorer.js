@@ -48,8 +48,6 @@ function get_icon_for_address(address) {
 		// 	return "my-computer";
 	} else if (address === "/my-documents/") {
 		return "my-documents";
-	} else if (address === "/network-neighborhood/") {
-		return "network";
 	} else if (address === "/desktop/") { // i.e. C:\Windows\Desktop
 		return "desktop";
 	} else if (address.match(/^\w+:\/\//) || address.match(/\.html?$/)) {
@@ -67,6 +65,11 @@ var folder_view, $iframe;
 
 var history_back_stack = [];
 var history_forward_stack = [];
+
+// Landing page navigation history (for sections within the same page)
+var landing_page_history = [];
+var landing_page_history_index = -1;
+var is_landing_page = false;
 
 var active_address = "";
 setInterval(() => {
@@ -214,13 +217,52 @@ var go_to = async function (address, action_name = "go") {
 
 		// We also can't get the title; it's kinda hard to make a web browser like this!
 		// $iframe.on("load", function(){
-		// 	set_title($iframe[0].contentDocument.title + " - Explorer"); // " - Microsoft Internet Explorer"
+		// 	set_title($iframe[0].contentDocument.title + " - Portfolio Explorer"); // " - Portfolio Explorer"
 		// });
 
 		$("#status-bar-right-icon").attr({
 			src: getIconPath("zone-internet", 16),
 		}).show();
 		$("#status-bar-right-text").text("Internet");
+		
+		// Check if this is the portfolio landing page
+		if (normalized_address.includes("programs/landing/index.html") || normalized_address.includes("landing/index.html")) {
+			is_landing_page = true;
+			$("#custom-portfolio-nav").show();
+			$("#landing-page-nav-buttons").show(); // Show back/forward buttons for landing page
+			$("#standard-internet-buttons").hide();
+			// Enable back/forward buttons for landing page navigation
+			$("#internet-buttons").show();
+			
+			// Add icons to landing page back/forward buttons after they're shown
+			setTimeout(function() {
+				$("#landing-page-nav-buttons .back-button").each(function() {
+					if ($(this).find(".icon").length === 0) {
+						$("<div class='icon'/>")
+							.appendTo($(this))
+							.css({
+								backgroundPosition: `0px 0px`, // Back button is sprite 0
+							});
+					}
+				});
+				$("#landing-page-nav-buttons .forward-button").each(function() {
+					if ($(this).find(".icon").length === 0) {
+						$("<div class='icon'/>")
+							.appendTo($(this))
+							.css({
+								backgroundPosition: `${-1 * 20}px 0px`, // Forward button is sprite 1
+							});
+					}
+				});
+			}, 100);
+		} else {
+			is_landing_page = false;
+			landing_page_history = [];
+			landing_page_history_index = -1;
+			$("#custom-portfolio-nav").hide();
+			$("#landing-page-nav-buttons").hide();
+			$("#standard-internet-buttons").show();
+		}
 	} else {
 		const eventHandlers = {}; // @TODO: less hacky event duct tape
 		// (just wanna have multiple listeners, but I gave myself a single-listener API)
@@ -243,11 +285,7 @@ var go_to = async function (address, action_name = "go") {
 			openFileOrFolder: executeFile,
 		});
 
-		if (
-			address !== "/desktop/" &&
-			address !== "/recycle-bin/" &&
-			address !== "/network-neighborhood/"
-		) {
+		if (address !== "/desktop/" && address !== "/recycle-bin/") {
 			$("#status-bar-right-icon").attr({
 				src: getIconPath("my-computer", 16),
 			}).show();
@@ -255,6 +293,92 @@ var go_to = async function (address, action_name = "go") {
 		} else {
 			$("#status-bar-right-icon").hide();
 			$("#status-bar-right-text").text("");
+		}
+
+		// Add virtual drives to My Computer (root folder)
+		if (address === "/") {
+			// Clear existing items first (they will be from filesystem)
+			folder_view.items = [];
+			$(folder_view.element).empty();
+			
+			// Define virtual drives
+			const virtualDrives = [
+				{
+					title: "C:\\ Main Drive",
+					iconID: "hard-disk-drive",
+					open: function() { go_to("/desktop/"); }
+				},
+				{
+					title: "D:\\ Documents",
+					iconID: "my-documents-folder",
+					open: function() { go_to("/my-documents/"); }
+				},
+				{
+					title: "E:\\ Media Drive",
+					iconID: "folder",
+					open: function() { go_to("/my-pictures/"); }
+				},
+				{
+					title: "F:\\ Portfolio Explorer",
+					iconID: "internet-explorer",
+					open: function() { go_to("programs/landing/index.html"); }
+				},
+				{
+					title: "G:\\ Games",
+					iconID: "folder",
+					open: function() { go_to("/programs/"); }
+				},
+				{
+					title: "H:\\ Audio Player (Winamp)",
+					iconID: "winamp2",
+					open: function() { 
+						// Try to execute via parent window (where programs.js is loaded)
+						try {
+							if (window.parent && window.parent.openWinamp) {
+								window.parent.openWinamp();
+							} else {
+								// Fallback: show message
+								alert("Winamp is not available in this context.");
+							}
+						} catch(e) {
+							console.log("Could not open Winamp:", e);
+							alert("Could not open Winamp.");
+						}
+					}
+				},
+				{
+					title: "I:\\ Utilities",
+					iconID: "folder",
+					open: function() { go_to("/programs/"); }
+				}
+			];
+			
+			// Add each virtual drive to the folder view
+			virtualDrives.forEach(drive => {
+				// Determine icon size based on view mode
+				let iconSize = 32; // default
+				if (folder_view.config.view_mode) {
+					if (folder_view.config.view_mode === "SMALL_ICONS" || 
+						folder_view.config.view_mode === "DETAILS" || 
+						folder_view.config.view_mode === "LIST") {
+						iconSize = 16;
+					}
+				}
+				const driveItem = new FolderViewItem({
+					title: drive.title,
+					icons: {
+						[iconSize]: getIconPath(drive.iconID, iconSize),
+					},
+					iconSize: iconSize,
+					open: drive.open,
+					is_system_folder: true,
+					file_path: drive.title.replace(/\\/g, "/"), // Add file_path for virtual drives
+				});
+				folder_view.add_item(driveItem);
+			});
+			
+			// Arrange icons after adding virtual drives
+			folder_view.arrange_icons();
 		}
 
 		await render_folder_template(folder_view, address, eventHandlers);
@@ -280,7 +404,7 @@ var resolve_address = async function (address) {
 				address = "https://web.archive.org/web/2015-05-05/" + address;
 			// complete exemptions:
 			} else if (
-				!address.match(/^https?:\/\/(www\.)?(copy.sh|topotech.github.io\/interdimensionalcable|isaiahodhner.io|brie.fi\/ng)/) &&
+				!address.match(/^https?:\/\/(www\.)?(copy.sh|topotech.github.io\/interdimensionalcable|isaiahodhner.io|brie.fi\/ng|1j01.github.io)/) &&
 				!address.match(/^(file|data|blob):\/\//)
 			) {
 				address = "https://web.archive.org/web/1998/" + address;
@@ -370,9 +494,8 @@ async function render_folder_template(folder_view, address, eventHandlers) {
 		// @TODO: load FOLDER.HTT from the folder we're showing, if it exists
 		const template_file_name =
 			address === "/recycle-bin/" ? "recycle.htt" :
-				address === "/network-neighborhood/" ? "nethood.htt" :
-					// address === "/my-computer/" ? "MYCOMP.HTT" : // I don't have a proper My Computer folder yet
-					"FOLDER.HTT";
+				// address === "/my-computer/" ? "MYCOMP.HTT" : // I don't have a proper My Computer folder yet
+				"FOLDER.HTT";
 		template_url = new URL(`/src/WEB/${template_file_name}`, location.href);
 		// console.log("fetching template", template_url.href);
 		htt = await (await fetch(template_url)).text();
@@ -777,12 +900,19 @@ ${doc.documentElement.outerHTML}`;
 												"/": "(C:)", //"My Computer",
 												"/my-pictures/": "My Pictures",
 												"/my-documents/": "My Documents",
-												"/network-neighborhood/": "Network Neighborhood",
 												"/desktop/": "Desktop",
 												"/programs/": "Program Files",
 												"/recycle-bin/": "Recycle Bin",
 											};
+											// Check if file_path exists
+											if (!item._item.file_path) {
+												return "System Folder";
+											}
 											if (system_folder_path_to_name[item._item.file_path]) {
+												return "System Folder";
+											}
+											// Check for virtual drives (C:\, D:\, etc.)
+											if (item._item.file_path.match(/^[A-Z]:\\/)) {
 												return "System Folder";
 											}
 											if (item._item.resolvedStats?.isDirectory?.()) {
@@ -851,7 +981,7 @@ ${doc.documentElement.outerHTML}`;
 		<script src="/lib/jquery.min.js"></script>
 		<script src="/lib/os-gui/$Window.js"></script>
 		<script src="/src/msgbox.js"></script>
-		<script>defaultMessageBoxTitle = "Explorer";</script>
+		<script>defaultMessageBoxTitle = "Portfolio Explorer";</script>
 		<script>
 			(${head_end_injected_script_fn})();
 		</script>
@@ -920,12 +1050,48 @@ function stop_loading() {
 }
 
 function go_back() {
+	// Handle landing page section navigation
+	if (is_landing_page && $iframe && $iframe[0] && $iframe[0].contentWindow) {
+		try {
+			if (typeof $iframe[0].contentWindow.navigateToHistory === "function") {
+				// Get current history index from iframe
+				if ($iframe[0].contentWindow.currentHistoryIndex !== undefined && 
+					$iframe[0].contentWindow.currentHistoryIndex > 0) {
+					const newIndex = $iframe[0].contentWindow.currentHistoryIndex - 1;
+					$iframe[0].contentWindow.navigateToHistory(newIndex);
+					return;
+				}
+			}
+		} catch (e) {
+			// Cross-origin or other error, fall through to normal back
+		}
+	}
+	
+	// Normal back navigation for different addresses
 	// $iframe[0].contentWindow.history.back();
 	// console.log({ history_back_stack, history_forward_stack });
 	history_forward_stack.push(active_address);
 	go_to(history_back_stack.pop(), "back");
 }
 function go_forward() {
+	// Handle landing page section navigation
+	if (is_landing_page && $iframe && $iframe[0] && $iframe[0].contentWindow) {
+		try {
+			if (typeof $iframe[0].contentWindow.navigateToHistory === "function") {
+				// Get current history index from iframe
+				if ($iframe[0].contentWindow.currentHistoryIndex !== undefined && 
+					$iframe[0].contentWindow.currentHistoryIndex < $iframe[0].contentWindow.navigationHistory.length - 1) {
+					const newIndex = $iframe[0].contentWindow.currentHistoryIndex + 1;
+					$iframe[0].contentWindow.navigateToHistory(newIndex);
+					return;
+				}
+			}
+		} catch (e) {
+			// Cross-origin or other error, fall through to normal forward
+		}
+	}
+	
+	// Normal forward navigation for different addresses
 	// $iframe[0].contentWindow.history.forward();
 	// console.log({ history_back_stack, history_forward_stack });
 	history_back_stack.push(active_address);
@@ -933,6 +1099,16 @@ function go_forward() {
 }
 function can_go_back() {
 	try {
+		// Check landing page history first
+		if (is_landing_page && $iframe && $iframe[0] && $iframe[0].contentWindow) {
+			try {
+				if ($iframe[0].contentWindow.currentHistoryIndex !== undefined) {
+					return $iframe[0].contentWindow.currentHistoryIndex > 0;
+				}
+			} catch (e) {
+				// Cross-origin error, fall through
+			}
+		}
 		// return $iframe[0].contentWindow.history.length > 1;
 		return history_back_stack.length > 0;
 	} catch (e) {
@@ -941,6 +1117,17 @@ function can_go_back() {
 }
 function can_go_forward() {
 	try {
+		// Check landing page history first
+		if (is_landing_page && $iframe && $iframe[0] && $iframe[0].contentWindow) {
+			try {
+				if ($iframe[0].contentWindow.currentHistoryIndex !== undefined && 
+					$iframe[0].contentWindow.navigationHistory !== undefined) {
+					return $iframe[0].contentWindow.currentHistoryIndex < $iframe[0].contentWindow.navigationHistory.length - 1;
+				}
+			} catch (e) {
+				// Cross-origin error, fall through
+			}
+		}
 		// return $iframe[0].contentWindow.history.length > 1;
 		return history_forward_stack.length > 0;
 	} catch (e) {
@@ -1100,12 +1287,36 @@ $(function () {
 
 	$(".toolbar-button").each((i, button) => {
 		const $button = $(button);
+		// Skip if icon already exists (for landing page buttons that might have been added)
+		if ($button.find(".icon").length > 0) {
+			return;
+		}
 		const sprite_n = [0, 1, 44, 21, 22, 23, 24, 26, 31, 38, 0, 1, 2, 3, 4, 5, 6, 12, 7][i];
 		$("<div class='icon'/>")
 			.appendTo($button)
 			.css({
 				backgroundPosition: `${-sprite_n * 20}px 0px`,
 			});
+	});
+	
+	// Explicitly add icons to landing page back/forward buttons if they don't have them
+	$("#landing-page-nav-buttons .back-button").each(function() {
+		if ($(this).find(".icon").length === 0) {
+			$("<div class='icon'/>")
+				.appendTo($(this))
+				.css({
+					backgroundPosition: `0px 0px`, // Back button is sprite 0
+				});
+		}
+	});
+	$("#landing-page-nav-buttons .forward-button").each(function() {
+		if ($(this).find(".icon").length === 0) {
+			$("<div class='icon'/>")
+				.appendTo($(this))
+				.css({
+					backgroundPosition: `${-1 * 20}px 0px`, // Forward button is sprite 1
+				});
+		}
 	});
 
 	$(document).on("pointerdown", ".toolbar-drag-handle", (event) => {
@@ -1273,5 +1484,70 @@ $(function () {
 			go_up();
 			event.preventDefault();
 		}
+	});
+	
+	// Custom portfolio navigation bar handlers
+	$(document).on("click", ".custom-nav-button", function() {
+		const section = $(this).data("section");
+		if ($iframe && $iframe[0] && $iframe[0].contentWindow) {
+			try {
+				// Try to call showSection function in the iframe
+				if (typeof $iframe[0].contentWindow.showSection === "function") {
+					$iframe[0].contentWindow.showSection(section);
+				}
+			} catch (e) {
+				// Cross-origin or other error, ignore
+				console.log("Could not communicate with iframe:", e);
+			}
+		}
+		// Update active state
+		$(".custom-nav-button").removeClass("active");
+		$(this).addClass("active");
+	});
+
+	// Resume download button handler
+	$(document).on("click", ".resume-download-button", function() {
+		// Try to download resume from My Documents folder
+		withFilesystem(function() {
+			var fs = BrowserFS.BFSRequire('fs');
+			var Buffer = BrowserFS.BFSRequire('buffer').Buffer;
+			
+			// Check if resume.pdf exists in my-documents folder
+			fs.readFile("/my-documents/Resume.pdf", function(err, data) {
+				if (err) {
+					// If file doesn't exist, create a placeholder or show message
+					// For now, we'll try to open the file from the filesystem
+					// or create a download link
+					try {
+						// Try to open My Documents folder and navigate to Resume.pdf
+						go_to("/my-documents/");
+						// Show message that user should click on Resume.pdf
+						setTimeout(function() {
+							showMessageBox({
+								iconID: "info",
+								message: "Please navigate to My Documents folder and open Resume.pdf to download."
+							});
+						}, 500);
+					} catch (e) {
+						showMessageBox({
+							iconID: "info",
+							message: "Resume.pdf will be available in My Documents folder."
+						});
+					}
+					return;
+				}
+				
+				// Create download link
+				var blob = new Blob([data], { type: 'application/pdf' });
+				var url = URL.createObjectURL(blob);
+				var a = document.createElement('a');
+				a.href = url;
+				a.download = 'Gabriel_Dos_Santos_Resume.pdf';
+				document.body.appendChild(a);
+				a.click();
+				document.body.removeChild(a);
+				URL.revokeObjectURL(url);
+			});
+		});
 	});
 });
