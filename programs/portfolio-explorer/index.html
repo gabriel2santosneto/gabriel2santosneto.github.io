@@ -528,7 +528,7 @@
               alt="Refresh"
             /><span>Refresh</span>
           </div>
-          <div class="tool-button" onclick="window.location.href='../../my-documents/Resume.pdf'">
+          <div class="tool-button" id="resume-btn">
             <img
               src="../../images/icons/document-32x32.png"
               alt="Resume"
@@ -851,6 +851,19 @@
             }
           });
         });
+
+      // Resume download handler
+      const resumeBtn = document.getElementById("resume-btn");
+      if (resumeBtn) {
+        resumeBtn.addEventListener("click", () => {
+          const link = document.createElement("a");
+          link.href = "../../my-documents/Resume.pdf";
+          link.download = "Gabriel_Santos_Resume.pdf";
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        });
+      }
 
       const observerRoot = usesDocumentScroll() ? null : mainArea;
       const observer = new IntersectionObserver(
