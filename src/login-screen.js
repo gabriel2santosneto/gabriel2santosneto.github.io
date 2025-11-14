@@ -211,7 +211,7 @@
 		.appendTo($contentStack);
 
 	$("<img>")
-		.attr("src", "images/gabriel.png")
+		.attr("src", "images/lego_profile.png")
 		.attr("alt", "Gabriel dos Santos portrait")
 		.css({
 			width: "100%",
