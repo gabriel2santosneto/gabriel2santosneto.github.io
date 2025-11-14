@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
     <title>Portfolio Explorer</title>
     <link href="../../lib/os-gui/layout.css" rel="stylesheet" type="text/css" />
     <link
@@ -25,11 +25,13 @@
       }
       html,
       body {
-        overscroll-behavior-x: none;
+        overscroll-behavior: none;
         touch-action: pan-y;
         width: 100%;
         max-width: 100%;
         overflow-x: hidden;
+        position: fixed;
+        height: 100%;
       }
       body {
         margin: 0;
@@ -41,8 +43,9 @@
           #005266 45%,
           #004152 100%
         );
-        overflow-x: hidden;
+        overflow: hidden;
         font-size: 18px;
+        -webkit-overflow-scrolling: touch;
       }
       .browser {
         background-color: #dcd7cf;
