@@ -541,23 +541,23 @@
           <span>Help</span>
         </div>
         <div class="toolbar">
-          <div class="tool-button">
+          <div class="tool-button" id="refresh-btn">
             <img
               src="../../images/refresh1.png"
               alt="Refresh"
             /><span>Refresh</span>
+          </div>
+          <div class="tool-button" id="home-btn">
+            <img
+              src="../../images/home1.png"
+              alt="Home"
+            /><span>Home</span>
           </div>
           <div class="tool-button" id="resume-btn">
             <img
               src="../../images/briefcase1.png"
               alt="Resume"
             /><span>Resume</span>
-          </div>
-          <div class="tool-button">
-            <img
-              src="../../images/home1.png"
-              alt="Home"
-            /><span>Home</span>
           </div>
             <div class="tool-button" id="framework-btn">
             <img
@@ -879,6 +879,24 @@
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
+        });
+      }
+
+      // Refresh button handler
+      const refreshBtn = document.getElementById("refresh-btn");
+      if (refreshBtn) {
+        refreshBtn.addEventListener("click", () => {
+          location.reload();
+        });
+      }
+
+      // Home button handler - scroll to top
+      const homeBtn = document.getElementById("home-btn");
+      if (homeBtn) {
+        homeBtn.addEventListener("click", () => {
+          const scrollElement = getScrollElement();
+          scrollElementTo(scrollElement, 0, "smooth");
+          setActiveLink(defaultSection);
         });
       }
 
