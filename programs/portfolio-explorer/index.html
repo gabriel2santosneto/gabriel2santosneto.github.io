@@ -540,16 +540,14 @@
               alt="Home"
             /><span>Home</span>
           </div>
-          <div class="tool-button" data-section-target="framework">
+            <div class="tool-button" id="framework-btn">
             <img
-              src="../../images/icons/favorites-32x32.png"
+              src="../../images/framework.png"
               alt="Framework"
             /><span>Framework</span>
           </div>
           <div class="tool-button" data-section-target="contact">
-            <img src="../../images/icons/mail-32x32.png" alt="Send" /><span
-              >Send</span
-            >
+            <img src="../../images/mail.png" alt="Send" /><span>Send</span>
           </div>
         </div>
         <div class="address-bar">
@@ -862,6 +860,32 @@
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
+        });
+      }
+
+      // Framework download handler
+      const frameworkBtn = document.getElementById("framework-btn");
+      if (frameworkBtn) {
+        frameworkBtn.addEventListener("click", async (e) => {
+          e.preventDefault();
+          const filePath = "../../my-documents/framework_report.pdf";
+          const fileName = "framework_report.pdf";
+          try {
+            const res = await fetch(filePath);
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const blob = await res.blob();
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+          } catch (err) {
+            console.error("Framework download failed", err);
+            alert("Could not download framework_report.pdf");
+          }
         });
       }
 
