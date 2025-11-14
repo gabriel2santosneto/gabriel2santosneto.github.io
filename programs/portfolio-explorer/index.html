@@ -561,12 +561,15 @@
           </div>
             <div class="tool-button" id="framework-btn">
             <img
-              src="../../images/framework1.png"
+              src="../../images/framework2.png"
               alt="Framework"
             /><span>Framework</span>
           </div>
           <div class="tool-button" data-section-target="contact">
             <img src="../../images/mail1.png" alt="Send" /><span>Send</span>
+          </div>
+          <div class="tool-button" id="blog-btn">
+            <img src="../../images/blog.png" alt="Blog" /><span>Blog</span>
           </div>
         </div>
         <div class="address-bar">
@@ -897,6 +900,14 @@
           const scrollElement = getScrollElement();
           scrollElementTo(scrollElement, 0, "smooth");
           setActiveLink(defaultSection);
+        });
+      }
+
+      // Blog button handler
+      const blogBtn = document.getElementById("blog-btn");
+      if (blogBtn) {
+        blogBtn.addEventListener("click", () => {
+          window.open("https://wordpress.org", "_blank");
         });
       }
 
