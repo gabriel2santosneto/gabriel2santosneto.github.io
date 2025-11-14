@@ -170,12 +170,17 @@
         flex-direction: column;
         gap: 12px;
         box-shadow: inset -1px 0 0 #fff;
-        position: sticky;
-        top: var(--chrome-offset, 0px);
-        align-self: flex-start;
-        max-height: calc(100vh - var(--chrome-offset, 150px));
-        overflow-y: auto;
         flex-shrink: 0;
+          overflow-y: auto;
+          max-height: 100vh;
+        }
+        @media (min-width: 1041px) {
+          .profile-pane {
+            position: sticky;
+            top: var(--chrome-offset, 0px);
+            align-self: flex-start;
+            max-height: calc(100vh - var(--chrome-offset, 150px));
+          }
       }
       .profile-photo {
         width: 120px;
