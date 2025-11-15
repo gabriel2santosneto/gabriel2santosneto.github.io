@@ -317,7 +317,7 @@ html, body {
 .desktop .folder-view {
 	overflow: hidden;
 	/* Add breathing room from screen edges for desktop icons */
-	padding: 38px 22px 22px 38px;
+	padding: 48px 22px 22px 38px;
 }
 .taskbar {
 	position: absolute;
