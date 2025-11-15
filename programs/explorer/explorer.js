@@ -18,6 +18,19 @@ function set_title(title) {
 }
 
 function set_icon(icon_id) {
+	// Special-case: use custom My Documents artwork sitewide when viewing that folder
+	if (icon_id === "my-documents") {
+		const customPath = "/images/my_documents.png";
+		const linkEl = document.querySelector("link[rel~=icon]");
+		if (linkEl) linkEl.href = customPath;
+		if (frameElement && frameElement.$window) {
+			frameElement.$window.setIcons({
+				"16": customPath,
+				"32": customPath,
+			});
+		}
+		return;
+	}
 	document.querySelector("link[rel~=icon]").href = getIconPath(icon_id, 16)
 	if (frameElement && frameElement.$window) {
 		frameElement.$window.setIcons({
@@ -159,6 +172,9 @@ var go_to = async function (address, action_name = "go") {
 		$("#address").val(address);
 	}
 	$("#address-icon").attr("src", getIconPath(get_icon_for_address(address), 16));
+	if (address === "/my-documents/") {
+		$("#address-icon").attr("src", "/images/my_documents.png");
+	}
 
 	// if (action_name === "back") {
 	// 	history_forward_stack.push(active_address);

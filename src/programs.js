@@ -1442,6 +1442,10 @@ add_icon_not_via_filesystem({
 add_icon_not_via_filesystem({
   title: "My Documents",
   iconID: "my-documents-folder",
+  // Override desktop icon to custom image
+  icons: {
+    [DESKTOP_ICON_SIZE]: "images/my_documents.png",
+  },
   open: function () {
     systemExecuteFile("/my-documents");
   },
