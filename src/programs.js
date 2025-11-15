@@ -1406,6 +1406,10 @@ var add_icon_not_via_filesystem = function (options) {
 add_icon_not_via_filesystem({
   title: "My Computer",
   iconID: "my-computer",
+  // Override desktop icon to custom image
+  icons: {
+    [DESKTOP_ICON_SIZE]: "images/my_computer.png",
+  },
   open: function () {
     // Open System Properties dialog instead of My Computer folder
     const viewportWidth =
@@ -1424,7 +1428,7 @@ add_icon_not_via_filesystem({
     );
     var $win = make_iframe_window({
       src: "programs/system-properties/index.html",
-      icons: iconsAtTwoSizes("my-computer"),
+      icons: { 16: "images/my_computer.png", 32: "images/my_computer.png" },
       title: "Gabriel dos Santos Properties",
       innerWidth,
       innerHeight,
