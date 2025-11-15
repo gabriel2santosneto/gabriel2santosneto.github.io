@@ -253,8 +253,15 @@ function FolderView(folder_path, { asDesktop = false, onStatus, openFolder, open
 
 		const grid_size_x = large_icons ? grid_size_x_for_large_icons : grid_size_x_for_small_icons;
 		const grid_size_y = large_icons ? grid_size_y_for_large_icons : grid_size_y_for_small_icons;
-		var x = 0;
-		var y = 0;
+		const cs = getComputedStyle($folder_view[0]);
+		const padLeft = parseInt(cs.paddingLeft) || 0;
+		const padTop = parseInt(cs.paddingTop) || 0;
+		const padRight = parseInt(cs.paddingRight) || 0;
+		const padBottom = parseInt(cs.paddingBottom) || 0;
+		const innerWidth = $folder_view[0].clientWidth - padLeft - padRight;
+		const innerHeight = $folder_view[0].clientHeight - padTop - padBottom;
+		var x = padLeft;
+		var y = padTop;
 		const dir_ness = (item) =>
 			// system folders always go first
 			// not all system folder shortcuts on the desktop have real paths (currently)
@@ -292,15 +299,15 @@ function FolderView(folder_path, { asDesktop = false, onStatus, openFolder, open
 			});
 			if (horizontal_first) {
 				x += grid_size_x;
-				if (x + grid_size_x > $folder_view[0].clientWidth) {
+				if ((x - padLeft) + grid_size_x > innerWidth) {
 					y += grid_size_y;
-					x = 0;
+					x = padLeft;
 				}
 			} else {
 				y += grid_size_y;
-				if (y + grid_size_y > $folder_view[0].clientHeight) {
+				if ((y - padTop) + grid_size_y > innerHeight) {
 					x += grid_size_x;
-					y = 0;
+					y = padTop;
 				}
 			}
 
