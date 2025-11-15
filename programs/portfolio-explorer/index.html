@@ -38,6 +38,20 @@
     margin-top: 0 !important;
   }
 }
+
+/* Project detail view state */
+.content-shell.project-view .profile-pane { display: none !important; }
+.content-shell.project-view .main-area { padding: 32px 48px !important; }
+.project-back-btn {
+  display: inline-block;
+  margin: 0 0 24px 0;
+  padding: 6px 14px;
+  background: #e4e4e4;
+  border: 2px outset #fff;
+  font-size: 14px;
+  cursor: pointer;
+  user-select: none;
+}
 <!DOCTYPE html>
 <html>
   <head>
@@ -800,13 +814,28 @@
               fetch(`./projects/${project}.html`)
                 .then(res => res.text())
                 .then(html => {
-                  // Only extract the .project-detail content
                   const temp = document.createElement('div');
                   temp.innerHTML = html;
                   const detail = temp.querySelector('.project-detail');
-                  if (detail) {
-                    document.querySelector('.main-area').innerHTML = '';
-                    document.querySelector('.main-area').appendChild(detail);
+                  const mainAreaEl = document.querySelector('.main-area');
+                  const contentShell = document.querySelector('.content-shell');
+                  if (detail && mainAreaEl && contentShell) {
+                    contentShell.classList.add('project-view');
+                    // Back button
+                    const backBtn = document.createElement('button');
+                    backBtn.className = 'project-back-btn';
+                    backBtn.textContent = '◀ Back to Portfolio';
+                    backBtn.addEventListener('click', () => {
+                      contentShell.classList.remove('project-view');
+                      // Reload original sections by refreshing (lightweight) or reconstructing
+                      location.hash = '#hero';
+                      location.reload();
+                    });
+                    mainAreaEl.innerHTML = '';
+                    mainAreaEl.appendChild(backBtn);
+                    mainAreaEl.appendChild(detail);
+                    // Scroll to top of project content
+                    mainAreaEl.scrollTop = 0;
                   }
                 });
             });
