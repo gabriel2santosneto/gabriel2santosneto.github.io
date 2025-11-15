@@ -400,16 +400,16 @@ body > .window-titlebar {
 	--sprite-x: 7px;
 }
 .os-window .window-title-area {
-	height: 16px;
+	height: 24px; /* increased from 16px (~50%) */
 }
 .os-window.tool-window .window-title-area {
-	height: 14px;
+	height: 21px; /* increased from 14px */
 }
 .os-window .window-titlebar {
-	height: 18px;
+	height: 27px; /* increased from 18px (~50%) */
 }
 .os-window.tool-window .window-titlebar {
-	height: 15px;
+	height: 22px; /* increased from 15px */
 }
 .os-window .window-title {
 	position: absolute;
