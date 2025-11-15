@@ -412,18 +412,13 @@ body > .window-titlebar {
 	height: 22px; /* increased from 15px */
 }
 .os-window .window-title {
-	position: absolute;
-	left: 0;
-	top: 0;
-	right: 0;
-	bottom: 0;
+	position: static;
 	display: inline-block !important;
 	margin: 0;
-	padding: 0;
+	padding: 0 2px;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
-	padding-left: 2px;
 }
 
 .menus {
