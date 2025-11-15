@@ -767,7 +767,7 @@ function openPortfolioExplorer(section) {
   const hash = section ? `#${section}` : "";
   const $win = make_iframe_window({
     src: `programs/portfolio-explorer/index.html${hash}`,
-    icons: iconsAtTwoSizes("internet-folder"),
+    icons: { 16: "images/portfolio_explorer.png", 32: "images/portfolio_explorer.png" },
     title: "Portfolio Explorer",
     innerWidth: Math.min(980, innerWidth * 0.9),
     innerHeight: Math.min(720, innerHeight * 0.85),
@@ -1455,6 +1455,10 @@ add_icon_not_via_filesystem({
 add_icon_not_via_filesystem({
   title: "Recycle Bin",
   iconID: "recycle-bin",
+  // Override desktop icon to custom image
+  icons: {
+    [DESKTOP_ICON_SIZE]: "images/recycle_bin.png",
+  },
   open: function () {
     Explorer("https://www.epa.gov/recycle/");
   },
@@ -1463,6 +1467,10 @@ add_icon_not_via_filesystem({
 add_icon_not_via_filesystem({
   title: "My Pictures",
   iconID: "folder",
+  // Override desktop icon to custom image
+  icons: {
+    [DESKTOP_ICON_SIZE]: "images/my_pictures.png",
+  },
   open: function () {
     systemExecuteFile("/my-pictures");
   },
@@ -1472,6 +1480,10 @@ add_icon_not_via_filesystem({
 add_icon_not_via_filesystem({
   title: "Portfolio Explorer",
   iconID: "internet-folder",
+  // Override desktop icon to custom image
+  icons: {
+    [DESKTOP_ICON_SIZE]: "images/portfolio_explorer.png",
+  },
   open: function () {
     if (typeof openPortfolioExplorer === "function") {
       openPortfolioExplorer("hero");
@@ -1483,6 +1495,10 @@ add_icon_not_via_filesystem({
 add_icon_not_via_filesystem({
   title: "Playground",
   iconID: "playground",
+  // Override desktop icon to custom image
+  icons: {
+    [DESKTOP_ICON_SIZE]: "images/playground.png",
+  },
   open: function () {
     systemExecuteFile("/playground/");
   },
