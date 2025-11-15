@@ -673,27 +673,25 @@
               <h2>Selected Projects</h2>
             </div>
             <div class="projects-grid">
-              <div class="project-card">
-                <img src="../../images/old-google.png" alt="Robotics Camp" />
+              <div class="project-card" data-project="robotics-playground">
+                <img src="../../images/old-google.png" alt="Robotics Playground" />
                 <strong>Robotics Playground</strong>
                 <p>
                   Immersive robotics curriculum for 300+ students across LATAM.
                 </p>
               </div>
-              <div class="project-card">
-                <img src="../../images/3d.jpg" alt="STEM Studio" />
+              <div class="project-card" data-project="stem-studio-os">
+                <img src="../../images/3d.jpg" alt="STEM Studio OS" />
                 <strong>STEM Studio OS</strong>
                 <p>
-                  Browser-based OS that turns workshops into interactive
-                  missions.
+                  Browser-based OS that turns workshops into interactive missions.
                 </p>
               </div>
-              <div class="project-card">
-                <img src="../../images/clouds.jpg" alt="Design Lab" />
+              <div class="project-card" data-project="design-lab-98">
+                <img src="../../images/clouds.jpg" alt="Design Lab 98" />
                 <strong>Design Lab 98</strong>
                 <p>
-                  Retro-inspired design lab for teaching engineering
-                  storytelling.
+                  Retro-inspired design lab for teaching engineering storytelling.
                 </p>
               </div>
             </div>
@@ -794,6 +792,25 @@
       </div>
     </div>
     <script>
+          // Internal project navigation
+          document.querySelectorAll('.project-card[data-project]').forEach(card => {
+            card.addEventListener('click', function() {
+              const project = card.getAttribute('data-project');
+              if (!project) return;
+              fetch(`./projects/${project}.html`)
+                .then(res => res.text())
+                .then(html => {
+                  // Only extract the .project-detail content
+                  const temp = document.createElement('div');
+                  temp.innerHTML = html;
+                  const detail = temp.querySelector('.project-detail');
+                  if (detail) {
+                    document.querySelector('.main-area').innerHTML = '';
+                    document.querySelector('.main-area').appendChild(detail);
+                  }
+                });
+            });
+          });
       const links = document.querySelectorAll(".nav-link");
       const sections = Array.from(document.querySelectorAll(".section"));
       const mainArea = document.querySelector(".main-area");
