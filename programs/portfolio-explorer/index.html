@@ -38,21 +38,6 @@
     margin-top: 0 !important;
   }
 }
-
-/* Project detail view state (applied as class on .browser) */
-.browser.project-view .browser-chrome { display: none !important; }
-.browser.project-view .profile-pane { display: none !important; }
-.browser.project-view .main-area { padding: 32px 48px !important; }
-.project-back-btn {
-  display: inline-block;
-  margin: 0 0 24px 0;
-  padding: 6px 14px;
-  background: #e4e4e4;
-  border: 2px outset #fff;
-  font-size: 14px;
-  cursor: pointer;
-  user-select: none;
-}
 <!DOCTYPE html>
 <html>
   <head>
@@ -566,6 +551,27 @@
         .projects-grid {
           grid-template-columns: 1fr;
         }
+      }
+      
+      /* Project detail view state (applied as class on .browser) */
+      .browser.project-view .browser-chrome { display: none !important; }
+      .browser.project-view .profile-pane { display: none !important; }
+      .browser.project-view .main-area { padding: 32px 48px !important; }
+      .project-back-btn {
+        display: inline-block;
+        margin: 0 0 24px 0;
+        padding: 6px 14px;
+        background: #e4e4e4;
+        border: 2px outset #fff;
+        font-size: 14px;
+        cursor: pointer;
+        user-select: none;
+      }
+      .project-back-btn:hover {
+        background: #f0f0f0;
+      }
+      .project-back-btn:active {
+        border-style: inset;
       }
     </style>
   </head>
