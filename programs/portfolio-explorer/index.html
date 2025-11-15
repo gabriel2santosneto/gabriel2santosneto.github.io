@@ -839,7 +839,8 @@
                       mainAreaEl.innerHTML = browserEl._originalMainHTML;
                       // Re-bind nav link events after restore
                       rebindNavLinks();
-                      mainAreaEl.scrollTop = 0;
+                      // Scroll to top
+                      ensureTop();
                     });
                     mainAreaEl.innerHTML = '';
                     mainAreaEl.appendChild(backBtn);
@@ -987,8 +988,7 @@
       const homeBtn = document.getElementById("home-btn");
       if (homeBtn) {
         homeBtn.addEventListener("click", () => {
-          const scrollElement = getScrollElement();
-          scrollElementTo(scrollElement, 0, "smooth");
+          ensureTop();
           setActiveLink(defaultSection);
         });
       }
@@ -1060,6 +1060,15 @@
         if (scrollElement !== mainArea) {
           mainArea?.scrollTo({ top: 0, behavior: "auto" });
         }
+        // Also ensure browser element scrolls to top
+        const browserEl = document.querySelector('.browser');
+        if (browserEl) {
+          browserEl.scrollTop = 0;
+        }
+        // Ensure body/document scrolls to top
+        window.scrollTo(0, 0);
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
       };
 
       const handleInitialPosition = () => {
