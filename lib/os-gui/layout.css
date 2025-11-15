@@ -30,23 +30,20 @@
 .os-window .window-titlebar,
 body > .window-titlebar {
 	display: flex;
-	flex-direction: row;
 	align-items: center;
-	justify-content: center; /* center icon + title horizontally */
-	gap: 8px; /* space between icon and title */
 	white-space: nowrap;
 	overflow: hidden;
 	flex-shrink: 0;
 }
 .os-window .window-title-area {
-	position: static; /* allow natural centering */
+	position: static;
 	flex: 0 0 auto;
 	display: flex;
 	align-items: center;
 }
 
 .os-window .window-titlebar .icon {
-	vertical-align: bottom;
+	vertical-align: middle;
 }
 
 .os-window.maximized .handle,
