@@ -39,9 +39,10 @@
   }
 }
 
-/* Project detail view state */
-.content-shell.project-view .profile-pane { display: none !important; }
-.content-shell.project-view .main-area { padding: 32px 48px !important; }
+/* Project detail view state (applied as class on .browser) */
+.browser.project-view .browser-chrome { display: none !important; }
+.browser.project-view .profile-pane { display: none !important; }
+.browser.project-view .main-area { padding: 32px 48px !important; }
 .project-back-btn {
   display: inline-block;
   margin: 0 0 24px 0;
@@ -811,35 +812,47 @@
             card.addEventListener('click', function() {
               const project = card.getAttribute('data-project');
               if (!project) return;
+              const browserEl = document.querySelector('.browser');
+              const mainAreaEl = document.querySelector('.main-area');
+              if (!browserEl || !mainAreaEl) return;
+              // Cache original content if first time
+              if (!browserEl._originalMainHTML) {
+                browserEl._originalMainHTML = mainAreaEl.innerHTML;
+              }
               fetch(`./projects/${project}.html`)
                 .then(res => res.text())
                 .then(html => {
                   const temp = document.createElement('div');
                   temp.innerHTML = html;
                   const detail = temp.querySelector('.project-detail');
-                  const mainAreaEl = document.querySelector('.main-area');
-                  const contentShell = document.querySelector('.content-shell');
-                  if (detail && mainAreaEl && contentShell) {
-                    contentShell.classList.add('project-view');
-                    // Back button
+                  if (detail) {
+                    browserEl.classList.add('project-view');
+                    // Build project view container
                     const backBtn = document.createElement('button');
                     backBtn.className = 'project-back-btn';
                     backBtn.textContent = '◀ Back to Portfolio';
                     backBtn.addEventListener('click', () => {
-                      contentShell.classList.remove('project-view');
-                      // Reload original sections by refreshing (lightweight) or reconstructing
-                      location.hash = '#hero';
-                      location.reload();
+                      browserEl.classList.remove('project-view');
+                      mainAreaEl.innerHTML = browserEl._originalMainHTML;
+                      // Re-bind nav link events after restore
+                      rebindNavLinks();
+                      mainAreaEl.scrollTop = 0;
                     });
                     mainAreaEl.innerHTML = '';
                     mainAreaEl.appendChild(backBtn);
                     mainAreaEl.appendChild(detail);
-                    // Scroll to top of project content
                     mainAreaEl.scrollTop = 0;
                   }
                 });
             });
           });
+          function rebindNavLinks(){
+            document.querySelectorAll('.nav-link').forEach(link => {
+              link.addEventListener('click', () => {
+                scrollSection(link.dataset.section);
+              });
+            });
+          }
       const links = document.querySelectorAll(".nav-link");
       const sections = Array.from(document.querySelectorAll(".section"));
       const mainArea = document.querySelector(".main-area");
